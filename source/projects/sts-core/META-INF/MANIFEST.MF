@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Export-Package: edu.emory.cci.bindaas.sts.bundle;uses:="org.osgi.frame
+ work";version="0.0.1.SNAPSHOT"
+Embed-Directory: dependency
+Ignore-Package: edu.emory.cci.bindaas.sts.bundle,java.lang
+Private-Package: edu.emory.cci.bindaas.sts.api.bundle
+Built-By: nadir
+Tool: Bnd-0.0.238
+Bundle-Name: sts-core
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.6.0_45
+Bundle-Version: 0.0.1.SNAPSHOT
+Bnd-LastModified: 1367958254119
+Embed-Transitive: true
+Bundle-ManifestVersion: 2
+Bundle-Description: Security Token Service API module
+Embed-StripGroup: true
+Import-Package: org.osgi.framework
+Embed-Dependency: *;scope=compile|runtime;inline=false
+Bundle-SymbolicName: bindaas-sts
+
