@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1368657012018
+Build-Jdk: 1.6.0_45
+Built-By: nadir
+Bundle-Description: Security Token Service Log4j Configuration module
+Bundle-ManifestVersion: 2
+Bundle-Name: bindaas-sts-log4j
+Bundle-SymbolicName: bindaas-sts-log4j
+Bundle-Version: 0.0.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Fragment-Host: org.springframework.osgi.log4j.osgi;bundle-version="1.2.1
+ 5"
+Tool: Bnd-1.50.0

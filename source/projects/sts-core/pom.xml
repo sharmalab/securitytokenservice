@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
-		<bundle.symbolicName>bindaas-sts</bundle.symbolicName>
+		<bundle.symbolicName>bindaas-sts-core</bundle.symbolicName>
 		<bundle.namespace>edu.emory.cci.bindaas.sts</bundle.namespace>
 	</properties>
 	<parent>
@@ -10,18 +10,37 @@
 		<version>0.0.1</version>
 		<relativePath>..</relativePath>
 	</parent>
-	
+
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>sts-core</artifactId>
+	<artifactId>${bundle.symbolicName}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<description>Security Token Service API module</description>
 	<dependencies>
-		
-		
+
+		<dependency>
+			<groupId>com.jamierf</groupId>
+			<artifactId>persistenthashmap</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bindaas-sts</groupId>
+			<artifactId>bindaas-sts-opensaml</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.ipojo.junit4osgi</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 	</dependencies>
-	
+
 	<build>
 		<resources>
 			<resource>
@@ -38,7 +57,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>2.3.7</version>
 				<extensions>true</extensions>
 				<!-- the following instructions build a simple set of public/private 
 					classes into an OSGi bundle -->
@@ -49,18 +68,17 @@
 						<Bundle-Version>${pom.version}</Bundle-Version>
 						<!-- assume public classes are in the top package, and private classes 
 							are under ".internal" -->
-						<Export-Package>edu.emory.cci.*;version="${pom.version}"</Export-Package>
+						<Export-Package>edu.emory.cci.bindaas.sts.util.*;version="${pom.version}",edu.emory.cci.bindaas.sts.api.*;version="${pom.version}"</Export-Package>
+						<Bundle-Activator>edu.emory.cci.bindaas.sts.bundle.Activator</Bundle-Activator>
+						<Import-Package>org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker;version="1.5.1",org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",junit.framework;resolution:=optional,!*</Import-Package>
+						<Private-Package>edu.emory.cci.bindaas.sts.bundle</Private-Package>
 
-						<!-- <Bundle-Activator>edu.emory.cci.bindaas.sts.api.bundle.Activator</Bundle-Activator> -->
-						<Import-Package>org.osgi.*,!*</Import-Package>
-						<Private-Package>edu.emory.cci.bindaas.sts.api.bundle</Private-Package>
-						<!-- embed compile/runtime dependencies using path that matches the 
-							copied dependency folder -->
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
-						<Embed-Directory>dependency</Embed-Directory>
+						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
 						<Embed-Transitive>true</Embed-Transitive>
-
+						<Include-Resource>META-INF/spring=spring</Include-Resource>
+						<Spring-Context>*</Spring-Context>
 					</instructions>
 				</configuration>
 			</plugin>

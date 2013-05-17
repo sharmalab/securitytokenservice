@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<saml2:Assertion xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+	IssueInstant="2013-05-14T22:28:08.977Z" Version="2.0">
+	<saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">caGrid Dorian 1.3 Production Grid
+	</saml2:Issuer>
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+			<ds:Reference URI="">
+				<ds:Transforms>
+					<ds:Transform
+						Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+					<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<ds:DigestValue>dnwkRD21wi2hA5Kv5z0KTpeBmSE=</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue>TbAkU/eGQwRjpcC9p0UcRxroganRHubPyWWNJVFLB5rmKIvfdqmXJyTL40YSXmMyPCo0IlinvwUW4FvURWkZOwDGPBqFkIY15e9bPzvqVg9/c/1tvvSNKxCf5MAxmGoXnDGIwdv7jHcgEUTkw0l9bYNkzt0CjAaf4Uore9qcn5k=
+		</ds:SignatureValue>
+		<ds:KeyInfo>
+			<ds:KeyValue>
+				<ds:RSAKeyValue>
+					<ds:Modulus>s9RyOu+rc24xNpUPbrWbQIpRHlFJS30D4iiIaMPbajKjpr6eoC/eGvRPfBW9plPVKCitLS1eHJHx
+						ZCaYVB2VKjwbAtNOPVSEUVs8O4QPAq7fhdnDxgBirGa2z1vVWOUiaQKXFhXgsVFWpUoST799GLSx
+						PpGSxozqXjsWx4ofj20=
+					</ds:Modulus>
+					<ds:Exponent>AQAB</ds:Exponent>
+				</ds:RSAKeyValue>
+			</ds:KeyValue>
+		</ds:KeyInfo>
+	</ds:Signature>
+	<saml2:Subject>
+		<saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity"
+			NameQualifier="edu:emory:cci:bindaas:sts:subject:username">nadir</saml2:NameID>
+		<saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+			<saml2:SubjectConfirmationData
+				NotBefore="2013-05-14T22:28:08.977Z" NotOnOrAfter="2013-05-14T23:51:28.977Z" />
+		</saml2:SubjectConfirmation>
+	</saml2:Subject>
+	<saml2:Conditions NotBefore="2013-05-14T22:28:08.977Z"
+		NotOnOrAfter="2013-05-14T23:51:28.977Z">
+		<saml2:AudienceRestriction>
+			<saml2:Audience>http://ClearCanvas.org</saml2:Audience>
+		</saml2:AudienceRestriction>
+	</saml2:Conditions>
+</saml2:Assertion>
