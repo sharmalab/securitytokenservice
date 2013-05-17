@@ -70,7 +70,7 @@
 							are under ".internal" -->
 						<Export-Package>edu.emory.cci.bindaas.sts.util.*;version="${pom.version}",edu.emory.cci.bindaas.sts.api.*;version="${pom.version}"</Export-Package>
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.bundle.Activator</Bundle-Activator>
-						<Import-Package>org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker;version="1.5.1",org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",junit.framework;resolution:=optional,!*</Import-Package>
+						<Import-Package>org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker;version="1.5.1",org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",!*</Import-Package>
 						<Private-Package>edu.emory.cci.bindaas.sts.bundle</Private-Package>
 
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
