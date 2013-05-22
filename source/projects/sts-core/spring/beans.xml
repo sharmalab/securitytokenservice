@@ -7,11 +7,25 @@
        http://www.springframework.org/schema/osgi  
        http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
+ 
 
-<bean id="managerService" class="edu.emory.cci.bindaas.sts.internal.impl.ManagerServiceImpl" >
-	<property name="serviceRegistrationFile"></property>	
+<bean id="managerService" class="edu.emory.cci.bindaas.sts.internal.impl.ManagerServiceImpl" init-method="init">
+	<property name="serviceRegistrationFile" value="service-reg.json"></property>
+	<property name="configurationManager" ref="configurationService"></property>	
 </bean>
 
+<bean id="configurationService" class="edu.emory.cci.bindaas.sts.internal.impl.ConfigurationManagerImpl" init-method="init">
+	<property name="configDirectory" value="service-config"></property>
+</bean>
+
+<bean id="fileBasesIdentityProvider" class="edu.emory.cci.bindaas.sts.ext.FileBasedIdentityProvider">
+<property name="configurationManager" ref="configurationService"></property>
+<property name="keyPairFileName" value="public-private-keypair.secret"></property>
+</bean>
+
+<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
+<osgi:service interface="edu.emory.cci.bindaas.sts.internal.api.IManagerService" ref="managerService"></osgi:service>
+<osgi:service interface="edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager" ref="configurationService"></osgi:service>
 </beans>
 
 

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1368657332758
+Bnd-LastModified: 1369168051861
 Build-Jdk: 1.6.0_45
 Built-By: nadir
 Bundle-Activator: edu.emory.cci.bindaas.sts.opensaml2.bundle.Activator

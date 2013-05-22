@@ -62,6 +62,8 @@
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
 						<Embed-Transitive>true</Embed-Transitive>
+						<Include-Resource>spring</Include-Resource>
+						<Spring-Context>spring/*.xml</Spring-Context>
 
 					</instructions>
 				</configuration>

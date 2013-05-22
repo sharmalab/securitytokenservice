@@ -45,7 +45,8 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 	
 	private Log log = LogFactory.getLog(getClass());
 	
-	public FileBasedIdentityService(IdentityServiceRegistration serviceRegistration) throws IdentityProviderException
+	
+	public void setup(IdentityServiceRegistration serviceRegistration) throws IdentityProviderException
 	{
 		configuration = FileBasedIdentityServiceConfiguration.convert(serviceRegistration.getConfiguration());
 		try {
@@ -127,8 +128,8 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 				tokenParams.setCustomProperties(parameters);
 				tokenParams.setSubject(credential.getUsername());
 				String tokenString = TokenGenerator.generateToken(tokenParams);
-				SecureToken token = new SecureToken();
-				token.setContent(tokenString);
+				SecureToken token = new SecureToken(tokenString);
+				
 				return token;
 			} catch (Exception e) {
 				log.error(e);

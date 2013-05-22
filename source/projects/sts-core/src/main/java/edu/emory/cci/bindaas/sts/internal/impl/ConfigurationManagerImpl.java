@@ -11,6 +11,14 @@ import edu.emory.cci.bindaas.sts.internal.conf.ConfigurationArea;
 
 public class ConfigurationManagerImpl implements IConfigurationManager {
 	private String configDirectory;
+	public String getConfigDirectory() {
+		return configDirectory;
+	}
+
+	public void setConfigDirectory(String configDirectory) {
+		this.configDirectory = configDirectory;
+	}
+
 	private File parent;
 	private Map<String,ConfigurationArea> cacheOfConfigrationArea;
 	

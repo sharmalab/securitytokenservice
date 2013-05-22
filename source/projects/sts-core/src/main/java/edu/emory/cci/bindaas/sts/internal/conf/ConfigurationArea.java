@@ -6,7 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.jamierf.persistenthashmap.util.FileUtils;
+import edu.emory.cci.bindaas.sts.util.FileUtils;
+
 
 public class ConfigurationArea {
 
@@ -78,7 +79,9 @@ public class ConfigurationArea {
 	public InputStream retieve(String filename) throws IOException
 	{
 		File file = new File(current, filename);
+		if(file.exists())
 		return new FileInputStream(file);
+		else return null;
 	}
 	
 }

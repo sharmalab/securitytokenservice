@@ -6,17 +6,17 @@
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
 	<build>
-	<resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>.</directory>
-        <includes>
-          <include>plugin.xml</include>
-        </includes>
-      </resource>
-    </resources>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>.</directory>
+				<includes>
+					<include>plugin.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -27,18 +27,7 @@
 				</configuration>
 			</plugin>
 
-	<plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+			
 		</plugins>
 	</build>
 
@@ -49,15 +38,20 @@
 			<version>2.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-            
+
 		<dependency>
 			<groupId>bindaas-osgi</groupId>
 			<artifactId>org.eclipse.osgi</artifactId>
 			<version>3.8.2.v20130124</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>com.springsource.org.apache.commons.logging</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -73,7 +67,17 @@
 			<id>maven-cci</id>
 			<url>http://maven.cci.emory.edu/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
 
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
 	</repositories>
 	<distributionManagement>
 		<!-- Publish the versioned releases here -->
@@ -92,8 +96,9 @@
 	</distributionManagement>
 
 
-
 	<modules>
 		<module>sts-core</module>
+		<module>sts-opensaml</module>
+		<module>sts-log4j</module>
 	</modules>
 </project>

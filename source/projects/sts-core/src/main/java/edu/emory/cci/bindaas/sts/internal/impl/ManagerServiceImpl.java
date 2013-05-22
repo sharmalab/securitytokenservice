@@ -3,6 +3,7 @@ package edu.emory.cci.bindaas.sts.internal.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,8 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.google.gson.JsonObject;
-import com.jamierf.persistenthashmap.CachedPersistentHashMap;
-import com.jamierf.persistenthashmap.serializers.GsonSerializer;
 
 import edu.emory.cci.bindaas.sts.api.IIdentityProvider;
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
@@ -21,6 +20,7 @@ import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
 import edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager;
 import edu.emory.cci.bindaas.sts.internal.api.IManagerService;
+import edu.emory.cci.bindaas.sts.util.PersistentHashMap;
 
 public class ManagerServiceImpl  implements IManagerService{
 
@@ -34,7 +34,7 @@ public class ManagerServiceImpl  implements IManagerService{
 		this.serviceRegistrationFile = serviceRegistrationFile;
 	}
 
-	private CachedPersistentHashMap<String, IdentityServiceRegistration> serviceRegistrationMap;
+	private PersistentHashMap<String, IdentityServiceRegistration> serviceRegistrationMap;
 	private ServiceTracker<IIdentityProvider, IIdentityProvider> identityProviderTracker;
 	private Map<IdentityServiceRegistration, IIdentityService> serviceMap;
 	private IConfigurationManager configurationManager;
@@ -50,7 +50,8 @@ public class ManagerServiceImpl  implements IManagerService{
 	
 	public void init() throws Exception
 	{
-		serviceRegistrationMap = new CachedPersistentHashMap<String, IdentityServiceRegistration>(new File(serviceRegistrationFile), new GsonSerializer());
+		serviceRegistrationMap = new PersistentHashMap<String, IdentityServiceRegistration>(new File(serviceRegistrationFile));
+		serviceMap = new HashMap<IdentityServiceRegistration, IIdentityService>();
 		identityProviderTracker = new ServiceTracker<IIdentityProvider, IIdentityProvider>(Activator.getContext(), IIdentityProvider.class, null);
 		identityProviderTracker.open();
 	}

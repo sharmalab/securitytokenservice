@@ -3,6 +3,8 @@ package edu.emory.cci.bindaas.sts.util;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -41,6 +43,7 @@ public class GSONUtil {
 			builder.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE);
 			builder.registerTypeAdapter(Class.class, new ClassSerializer());
 			builder.registerTypeAdapter(Class.class, new ClassDeserializer());
+			builder.registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter());
 			gson = builder.excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 			
 		}
@@ -56,7 +59,15 @@ public class GSONUtil {
 		}
 		
 	}
-	
+	private static class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+        public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return Base64.decodeBase64(json.getAsString().getBytes());
+        }
+ 
+        public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(new String(Base64.encodeBase64(src)));
+        }
+    }
 	private static class ClassDeserializer implements JsonDeserializer<Class<? extends Object>> {
 
 		public Class<? extends Object> deserialize(JsonElement json, Type arg1,
