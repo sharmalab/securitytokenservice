@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<properties>
+		<bundle.symbolicName>bindaas-sts-cxf-wrapper</bundle.symbolicName>
+		<bundle.namespace>edu.emory.cci.bindaas.sts.cxf</bundle.namespace>
+	</properties>
+	<parent>
+		<groupId>bindaas-sts</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>${bundle.symbolicName}</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+	<description>CXF Wrapper module</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-bundle</artifactId>
+			<version>2.7.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-xjc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>.</directory>
+				<includes>
+					<include>plugin.xml</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<!-- the following instructions build a simple set of public/private 
+					classes into an OSGi bundle -->
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<instructions>
+						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>org.apache.cxf.configuration.security;version="${project.version}",org.apache.cxf.helpers;version="${project.version}",org.apache.cxf.interceptor.security;version="${project.version}",org.apache.cxf.jaxrs.ext;version="${project.version}",org.apache.cxf.jaxrs.model;version="${project.version}",org.apache.cxf.jaxrs.utils;version="${project.version}",org.apache.cxf.message;version="${project.version}",org.apache.cxf.phase;version="${project.version}",org.apache.cxf.security;version="${project.version}",org.apache.cxf.transport.http;version="${project.version}"
+						,javax.ws.rs.*;version="${project.version}",edu.emory.cci.bindaas.sts.cxf.core;version="${project.version}"</Export-Package>
+						<Bundle-Activator>edu.emory.cci.bindaas.sts.cxf.bundle.Activator</Bundle-Activator>
+						<Import-Package>org.osgi.service.event,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,!*</Import-Package>
+						<Private-Package>edu.emory.cci.bindaas.sts.cxf.bundle,edu.emory.cci.bindaas.sts.cxf.core</Private-Package>
+						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
+						<Embed-Directory>target/dependency</Embed-Directory>
+						<Embed-StripGroup>true</Embed-StripGroup>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Include-Resource>spring=spring</Include-Resource>
+						<Spring-Context>spring/*.xml</Spring-Context>
+
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

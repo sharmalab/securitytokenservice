@@ -34,6 +34,14 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>bindaas-sts</groupId>
+			<artifactId>bindaas-sts-cxf-wrapper</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -60,19 +68,19 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-						<Bundle-Version>${pom.version}</Bundle-Version>
+						<Bundle-Version>${project.version}</Bundle-Version>
 						<!-- assume public classes are in the top package, and private classes 
 							are under ".internal" -->
-						<Export-Package>edu.emory.cci.bindaas.sts.util.*;version="${pom.version}",edu.emory.cci.bindaas.sts.api.*;version="${pom.version}"</Export-Package>
+						<Export-Package>edu.emory.cci.bindaas.sts.service.*;version="${project.version}",edu.emory.cci.bindaas.sts.util.*;version="${project.version}",edu.emory.cci.bindaas.sts.api.*;version="${project.version}"</Export-Package>
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.bundle.Activator</Bundle-Activator>
-						<Import-Package>com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit;resolution:=optional,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",!*</Import-Package>
+						<Import-Package>edu.emory.cci.bindaas.sts.cxf.core,javax.ws.rs.ext,javax.ws.rs.core,javax.ws.rs,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",!*</Import-Package>
 						<Private-Package>edu.emory.cci.bindaas.sts.bundle</Private-Package>
 
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
 						<Embed-Transitive>true</Embed-Transitive>
-						<Include-Resource>spring</Include-Resource>
+						<Include-Resource>spring=spring</Include-Resource>
 						<Spring-Context>spring/*.xml</Spring-Context>
 						<Test-Suite>edu.emory.cci.bindaas.sts.internal.test.ManagerService</Test-Suite>
 					</instructions>

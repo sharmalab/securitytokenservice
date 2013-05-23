@@ -4,11 +4,11 @@ import edu.emory.cci.bindaas.sts.api.IIdentityProvider;
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
-import edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager;
+import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
 
 public class FileBasedIdentityProvider implements IIdentityProvider {
 
-	private IConfigurationManager configurationManager;
+	private IConfigurationManagerService configurationManager;
 	private String keyPairFileName ;
 	
 	public String getKeyPairFileName() {
@@ -19,11 +19,11 @@ public class FileBasedIdentityProvider implements IIdentityProvider {
 		this.keyPairFileName = keyPairFileName;
 	}
 
-	public IConfigurationManager getConfigurationManager() {
+	public IConfigurationManagerService getConfigurationManager() {
 		return configurationManager;
 	}
 
-	public void setConfigurationManager(IConfigurationManager configurationManager) {
+	public void setConfigurationManager(IConfigurationManagerService configurationManager) {
 		this.configurationManager = configurationManager;
 	}
 

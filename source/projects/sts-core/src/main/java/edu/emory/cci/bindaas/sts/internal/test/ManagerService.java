@@ -19,7 +19,7 @@ import edu.emory.cci.bindaas.sts.api.model.SecureToken;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
 import edu.emory.cci.bindaas.sts.ext.FileBasedIdentityProvider;
 import edu.emory.cci.bindaas.sts.ext.FileBasedIdentityServiceConfiguration;
-import edu.emory.cci.bindaas.sts.internal.api.IManagerService;
+import edu.emory.cci.bindaas.sts.service.IManagerService;
 import edu.emory.cci.bindaas.sts.util.GSONUtil;
 
 public class ManagerService {

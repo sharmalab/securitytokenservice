@@ -18,8 +18,8 @@ import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
-import edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager;
-import edu.emory.cci.bindaas.sts.internal.api.IManagerService;
+import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
+import edu.emory.cci.bindaas.sts.service.IManagerService;
 import edu.emory.cci.bindaas.sts.util.PersistentHashMap;
 
 public class ManagerServiceImpl  implements IManagerService{
@@ -37,12 +37,12 @@ public class ManagerServiceImpl  implements IManagerService{
 	private PersistentHashMap<String, IdentityServiceRegistration> serviceRegistrationMap;
 	private ServiceTracker<IIdentityProvider, IIdentityProvider> identityProviderTracker;
 	private Map<IdentityServiceRegistration, IIdentityService> serviceMap;
-	private IConfigurationManager configurationManager;
-	public IConfigurationManager getConfigurationManager() {
+	private IConfigurationManagerService configurationManager;
+	public IConfigurationManagerService getConfigurationManager() {
 		return configurationManager;
 	}
 
-	public void setConfigurationManager(IConfigurationManager configurationManager) {
+	public void setConfigurationManager(IConfigurationManagerService configurationManager) {
 		this.configurationManager = configurationManager;
 	}
 

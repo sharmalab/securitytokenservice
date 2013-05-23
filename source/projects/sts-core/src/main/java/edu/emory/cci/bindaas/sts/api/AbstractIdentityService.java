@@ -10,15 +10,15 @@ import org.apache.commons.logging.LogFactory;
 
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
-import edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager;
 import edu.emory.cci.bindaas.sts.opensaml2.model.SAMLSigningKeyPair;
 import edu.emory.cci.bindaas.sts.opensaml2.util.SecurityUtil;
+import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
 import edu.emory.cci.bindaas.sts.util.GSONUtil;
 
 public  abstract class  AbstractIdentityService implements IIdentityService {
 
 	private SAMLSigningKeyPair keyPair;
-	private IConfigurationManager configurationManager;
+	private IConfigurationManagerService configurationManager;
 	private String keyPairFilename;
 	private IdentityServiceRegistration serviceRegistration;
 	private Log log = LogFactory.getLog(getClass());
@@ -36,10 +36,10 @@ public  abstract class  AbstractIdentityService implements IIdentityService {
 	public void setKeyPairFilename(String keyPairFilename) {
 		this.keyPairFilename = keyPairFilename;
 	}
-	public IConfigurationManager getConfigurationManager() {
+	public IConfigurationManagerService getConfigurationManager() {
 		return configurationManager;
 	}
-	public void setConfigurationManager(IConfigurationManager configurationManager) {
+	public void setConfigurationManager(IConfigurationManagerService configurationManager) {
 		this.configurationManager = configurationManager;
 	}
 	public SAMLSigningKeyPair getKeyPair() {

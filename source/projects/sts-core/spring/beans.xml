@@ -14,7 +14,7 @@
 	<property name="configurationManager" ref="configurationService"></property>	
 </bean>
 
-<bean id="configurationService" class="edu.emory.cci.bindaas.sts.internal.impl.ConfigurationManagerImpl" init-method="init">
+<bean id="configurationService" class="edu.emory.cci.bindaas.sts.internal.impl.ConfigurationManagerServiceImpl" init-method="init">
 	<property name="configDirectory" value="service-config"></property>
 </bean>
 
@@ -23,9 +23,19 @@
 <property name="keyPairFileName" value="public-private-keypair.secret"></property>
 </bean>
 
+<bean id="applicationStarter" class="edu.emory.cci.bindaas.sts.bundle.ApplicationStarter" init-method="startup">
+	<property name="securityTokenService" ref="securityTokenServiceCore"></property>
+	<property name="host" value="localhost"></property>
+	<property name="port" value="1111"></property>
+</bean>
+
+<bean id="securityTokenServiceCore" class="edu.emory.cci.bindaas.sts.rest.impl.SecurityTokenServiceCoreImpl">
+</bean>
+
+
 <osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.internal.api.IManagerService" ref="managerService"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.internal.api.IConfigurationManager" ref="configurationService"></osgi:service>
+<osgi:service interface="edu.emory.cci.bindaas.sts.service.IManagerService" ref="managerService"></osgi:service>
+<osgi:service interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
 </beans>
 
 

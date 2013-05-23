@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1369254853149
+Bnd-LastModified: 1369273256809
 Build-Jdk: 1.6.0_45
 Built-By: nadir
 Bundle-Activator: edu.emory.cci.bindaas.sts.bundle.Activator
@@ -16,26 +16,31 @@ Embed-StripGroup: true
 Embed-Transitive: true
 Embedded-Artifacts: target/dependency/commons-codec-1.3.jar;g="commons-c
  odec";a="commons-codec";v="1.3"
-Export-Package: edu.emory.cci.bindaas.sts.util;uses:="com.google.gson,co
- m.google.gson.reflect,com.google.gson.stream";version="0.0.1.SNAPSHOT",
- edu.emory.cci.bindaas.sts.api;uses:="edu.emory.cci.bindaas.sts.opensaml
- 2.model,org.apache.commons.logging,edu.emory.cci.bindaas.sts.api.model,
- edu.emory.cci.bindaas.sts.opensaml2.util,edu.emory.cci.bindaas.sts.api.
- exception,com.google.gson,edu.emory.cci.bindaas.sts.util";version="0.0.
- 1.SNAPSHOT",edu.emory.cci.bindaas.sts.api.model;uses:="com.google.gson.
- annotations,com.google.gson";version="0.0.1.SNAPSHOT",edu.emory.cci.bin
- daas.sts.api.exception;uses:="edu.emory.cci.bindaas.sts.api.model";vers
- ion="0.0.1.SNAPSHOT"
-Ignore-Package: java.security,java.lang.reflect,java.util,java.io,edu.em
- ory.cci.bindaas.sts.internal.api,java.lang
+Export-Package: edu.emory.cci.bindaas.sts.service;uses:="edu.emory.cci.b
+ indaas.sts.api,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaa
+ s.sts.api.exception,com.google.gson";version="0.0.1.SNAPSHOT",edu.emory
+ .cci.bindaas.sts.util;uses:="com.google.gson,com.google.gson.reflect,co
+ m.google.gson.stream";version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.st
+ s.api;uses:="org.apache.commons.logging,edu.emory.cci.bindaas.sts.opens
+ aml2.model,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaas.st
+ s.opensaml2.util,edu.emory.cci.bindaas.sts.api.exception,edu.emory.cci.
+ bindaas.sts.service,com.google.gson,edu.emory.cci.bindaas.sts.util";ver
+ sion="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.api.model;uses:="com.go
+ ogle.gson.annotations,com.google.gson";version="0.0.1.SNAPSHOT",edu.emo
+ ry.cci.bindaas.sts.api.exception;uses:="edu.emory.cci.bindaas.sts.api.m
+ odel";version="0.0.1.SNAPSHOT"
+Ignore-Package: java.security,java.lang.reflect,edu.emory.cci.bindaas.st
+ s.rest.impl,java.util,java.io,java.lang,edu.emory.cci.bindaas.sts.rest.
+ api
 Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
  tions;version="[2.1,3)",com.google.gson.reflect;version="[2.1,3)",com.g
  oogle.gson.stream;version="[2.1,3)",edu.emory.cci.bindaas.sts.opensaml2
  .core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.mode
  l;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;ver
- sion="0.0.1.SNAPSHOT",org.apache.commons.logging;version="[1.1,2)",org.
- junit;resolution:=optional;version="[0.0,1)",org.osgi.framework;version
- ="[1.7,2)",org.osgi.util.tracker;version="[1.5,2)"
+ sion="0.0.1.SNAPSHOT",javax.ws.rs;version="[0.0,1)",javax.ws.rs.core;ve
+ rsion="[0.0,1)",javax.ws.rs.ext;version="[0.0,1)",org.apache.commons.lo
+ gging;version="[1.1,2)",org.junit;version="[0.0,1)",org.osgi.framework;
+ version="[1.7,2)",org.osgi.util.tracker;version="[1.5,2)"
 Spring-Context: spring/*.xml
 Test-Suite: edu.emory.cci.bindaas.sts.internal.test.ManagerService
 Tool: Bnd-1.50.0
