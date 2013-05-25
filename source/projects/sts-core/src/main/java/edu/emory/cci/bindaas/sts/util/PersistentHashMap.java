@@ -6,7 +6,11 @@ import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
@@ -16,9 +20,14 @@ private static final long serialVersionUID = -2804233468591293561L;
 
 private File file;
 private Type type = new TypeToken<HashMap<K,V>>(){}.getType();
-public PersistentHashMap(File file) throws Exception
+private Class<K> keyType ;
+private Class<V> valueType ;
+
+public PersistentHashMap(File file , Class<K> clazzKey , Class<V> classValue) throws Exception
 {
 	this.file = file;
+	this.keyType = clazzKey;
+	this.valueType = classValue;
 	load();
 }
 
@@ -26,9 +35,18 @@ private void load() throws Exception
 {
 	if(file.exists() && file.isFile())
 	{
-		HashMap<K,V> newHashMap = GSONUtil.getGSONInstance().fromJson(new FileReader(file), type);
-		if(newHashMap!=null)
-		this.putAll(newHashMap);
+		JsonObject json = GSONUtil.getJsonParser().parse(new FileReader(file)).getAsJsonObject();
+		
+		Set<Entry<String, JsonElement>> entrySet = json.entrySet();
+		
+		for(Entry<String, JsonElement> entry : entrySet)
+		{
+			String keyString = entry.getKey();
+			String valueString = entry.getValue().toString();
+			K key = GSONUtil.getGSONInstance().fromJson(keyString, keyType);
+			V value = GSONUtil.getGSONInstance().fromJson(valueString, valueType);
+			super.put(key , value);
+		}
 	}
 	
 }
@@ -52,9 +70,26 @@ public  synchronized V put(K key, V value) {
 		 V oldVal = super.put(key, value);
 		 try{
 			 	FileWriter fw = new FileWriter(file);
-			 	GSONUtil.getGSONInstance().toJson(this , type ,  new JsonWriter(fw));
+			 	JsonObject jsonObject = new JsonObject();
+			 	for(K k : keySet())
+			 	{
+			 		String keyString = null;
+			 		if(! (k instanceof String))
+			 		{
+			 			keyString = GSONUtil.getGSONInstance().toJson(k , keyType);
+			 		}
+			 		else
+			 		{
+			 			keyString = k.toString();
+			 		}
+			 		
+					JsonElement valueJson = GSONUtil.getGSONInstance().toJsonTree( value , valueType);
+					jsonObject.add(keyString , valueJson);
+			 	}
+			 	fw.write(jsonObject.toString());
+//			 	GSONUtil.getGSONInstance().toJson(this , type ,  new JsonWriter(fw));
 			 	fw.close();
-//			 	System.out.println(GSONUtil.getGSONInstance().toJson(this , type));
+			 	
 		 }
 		 catch(Exception ee)
 		 {

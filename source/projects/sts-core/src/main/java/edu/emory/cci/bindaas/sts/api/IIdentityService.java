@@ -18,6 +18,7 @@ public interface IIdentityService {
 	
 	public SecureToken issueToken(Credential credential , String serviceProvider) throws IdentityProviderException,AuthenticationException;
 	public boolean validateToken(SecureToken secureToken) throws IdentityProviderException;
+	public boolean authenticate(Credential credential) throws IdentityProviderException,AuthenticationException;
 	
 	public Collection<User> getUsers() throws IdentityProviderException;
 	public Collection<Group> getGroups() throws IdentityProviderException;

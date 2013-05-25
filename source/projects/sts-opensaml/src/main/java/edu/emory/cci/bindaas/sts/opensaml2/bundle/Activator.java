@@ -15,7 +15,7 @@ public class Activator implements BundleActivator {
 		
 		context = arg0;
 		log.debug("--- Started ----");
-		TokenGenerator.main(null);
+		TokenGenerator.init();
 	}
 
 	

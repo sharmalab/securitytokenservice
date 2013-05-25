@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import edu.emory.cci.bindaas.sts.api.IIdentityProvider;
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
+import edu.emory.cci.bindaas.sts.api.exception.IdentityServiceNotFoundException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
 import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
@@ -50,7 +51,7 @@ public class ManagerServiceImpl  implements IManagerService{
 	
 	public void init() throws Exception
 	{
-		serviceRegistrationMap = new PersistentHashMap<String, IdentityServiceRegistration>(new File(serviceRegistrationFile));
+		serviceRegistrationMap = new PersistentHashMap<String, IdentityServiceRegistration>(new File(serviceRegistrationFile) , String.class , IdentityServiceRegistration.class);
 		serviceMap = new HashMap<IdentityServiceRegistration, IIdentityService>();
 		identityProviderTracker = new ServiceTracker<IIdentityProvider, IIdentityProvider>(Activator.getContext(), IIdentityProvider.class, null);
 		identityProviderTracker.open();
@@ -138,8 +139,8 @@ public class ManagerServiceImpl  implements IManagerService{
 	}
 
 	public IIdentityService getService(String id)
-			throws IdentityProviderException {
-		// lookup ServiceReg corresponding to id
+			throws IdentityProviderException, IdentityServiceNotFoundException {
+				// lookup ServiceReg corresponding to id
 				IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
 				if(serviceRegistration!=null)
 				{
@@ -176,7 +177,7 @@ public class ManagerServiceImpl  implements IManagerService{
 				}
 				else
 				{
-					throw new IdentityProviderException("unknown" , "No service registered with id [" + id + "]");
+					throw new IdentityServiceNotFoundException(id);
 				}
 		}
 

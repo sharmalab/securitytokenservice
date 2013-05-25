@@ -95,7 +95,7 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 	public boolean authenticate(Credential credential) {
 		if(credential.getUsername()!=null && credential.getPassword()!=null )
 		{
-			if(usernamePasswordStore.get(credential.getUsername()) . equals(credential.getPassword()))
+			if(usernamePasswordStore!=null && usernamePasswordStore.get(credential.getUsername())!=null && usernamePasswordStore.get(credential.getUsername()) . equals(credential.getPassword()))
 			return true;
 		}
 		return false;

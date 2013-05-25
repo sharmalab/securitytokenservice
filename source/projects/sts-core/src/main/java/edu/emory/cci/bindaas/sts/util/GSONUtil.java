@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -44,6 +45,8 @@ public class GSONUtil {
 			builder.registerTypeAdapter(Class.class, new ClassSerializer());
 			builder.registerTypeAdapter(Class.class, new ClassDeserializer());
 			builder.registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter());
+			builder.registerTypeAdapter(JsonObject.class, new JsonObjectSerializerDeserializer());
+			
 			gson = builder.excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 			
 		}
@@ -68,6 +71,24 @@ public class GSONUtil {
             return new JsonPrimitive(new String(Base64.encodeBase64(src)));
         }
     }
+
+	public static class JsonObjectSerializerDeserializer implements JsonDeserializer<JsonObject> , JsonSerializer<JsonObject> {
+
+		public JsonElement serialize(JsonObject src, Type typeOfSrc,
+				JsonSerializationContext context) {
+			
+			return src;
+		}
+
+		
+		public JsonObject deserialize(JsonElement json, Type typeOfT,
+				JsonDeserializationContext context) throws JsonParseException {
+			
+			return json.getAsJsonObject();
+		}
+
+	}
+
 	private static class ClassDeserializer implements JsonDeserializer<Class<? extends Object>> {
 
 		public Class<? extends Object> deserialize(JsonElement json, Type arg1,

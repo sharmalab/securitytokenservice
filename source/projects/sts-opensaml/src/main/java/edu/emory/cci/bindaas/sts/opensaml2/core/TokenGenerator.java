@@ -31,6 +31,7 @@ import org.opensaml.saml2.core.SubjectConfirmationData;
 import org.opensaml.saml2.core.impl.AssertionMarshaller;
 import org.opensaml.saml2.core.impl.AssertionUnmarshaller;
 import org.opensaml.xml.ConfigurationException;
+import org.opensaml.xml.XMLConfigurator;
 import org.opensaml.xml.XMLObjectBuilder;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.parse.BasicParserPool;
@@ -65,17 +66,22 @@ public class TokenGenerator {
 	private static XMLObjectBuilderFactory builderFactory;
 	private static BasicParserPool ppMgr = new BasicParserPool();
 	private static Log log = LogFactory.getLog(TokenGenerator.class);
-
-	static {
-		ppMgr.setNamespaceAware(true);
+	private static boolean INITIALIZED = false;
+	public static void init() throws ConfigurationException
+	{
+		if(!INITIALIZED)
+		{
+			ppMgr.setNamespaceAware(true);
+			// OpenSAML 2.3
+			DefaultBootstrap.bootstrap();
+			INITIALIZED = true;
+		}
 	}
-
 	public static XMLObjectBuilderFactory getSAMLBuilder()
 			throws ConfigurationException {
 
 		if (builderFactory == null) {
-			// OpenSAML 2.3
-			DefaultBootstrap.bootstrap();
+			init();
 			builderFactory = Configuration.getBuilderFactory();
 		}
 
@@ -311,6 +317,7 @@ public class TokenGenerator {
 	public static boolean validateSignature(String token, Credential credential)
 			throws TokenGeneratorException {
 		try {
+			init();
 			InputStream in = new ByteArrayInputStream(token.getBytes());
 			Document inCommonMDDoc = ppMgr.parse(in);
 			AssertionUnmarshaller unmarshaller = new AssertionUnmarshaller();

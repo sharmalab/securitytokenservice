@@ -99,7 +99,7 @@ public class ManagerService {
 			assertTrue(stat);
 			
 			
-		} catch (IdentityProviderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}

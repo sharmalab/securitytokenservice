@@ -29,7 +29,8 @@
 	<property name="port" value="1111"></property>
 </bean>
 
-<bean id="securityTokenServiceCore" class="edu.emory.cci.bindaas.sts.rest.impl.SecurityTokenServiceCoreImpl">
+<bean id="securityTokenServiceCore" class="edu.emory.cci.bindaas.sts.rest.impl.SecurityTokenServiceCoreImpl" init-method="init">
+	<property name="managerService" ref="managerService"></property>
 </bean>
 
 
