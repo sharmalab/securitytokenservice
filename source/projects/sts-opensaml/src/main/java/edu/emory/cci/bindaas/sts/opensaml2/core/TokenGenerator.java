@@ -31,7 +31,6 @@ import org.opensaml.saml2.core.SubjectConfirmationData;
 import org.opensaml.saml2.core.impl.AssertionMarshaller;
 import org.opensaml.saml2.core.impl.AssertionUnmarshaller;
 import org.opensaml.xml.ConfigurationException;
-import org.opensaml.xml.XMLConfigurator;
 import org.opensaml.xml.XMLObjectBuilder;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.parse.BasicParserPool;

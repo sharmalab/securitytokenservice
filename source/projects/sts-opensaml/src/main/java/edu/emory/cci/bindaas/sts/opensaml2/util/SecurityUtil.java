@@ -3,12 +3,10 @@ package edu.emory.cci.bindaas.sts.opensaml2.util;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import sun.security.pkcs.PKCS8Key;
 import sun.security.x509.X509Key;
-
 import edu.emory.cci.bindaas.sts.opensaml2.model.SAMLSigningKeyPair;
 
 public class SecurityUtil {

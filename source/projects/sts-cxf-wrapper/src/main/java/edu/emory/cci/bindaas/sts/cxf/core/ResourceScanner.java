@@ -2,7 +2,6 @@ package edu.emory.cci.bindaas.sts.cxf.core;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
