@@ -13,6 +13,7 @@ public class Activator implements BundleActivator {
 		
 		context = arg0;
 		log.debug("--- Started ----");
+		
 	}
 
 	
@@ -23,6 +24,7 @@ public class Activator implements BundleActivator {
 	
 	public static BundleContext getContext()
 	{
+		
 		return context;
 	}
 

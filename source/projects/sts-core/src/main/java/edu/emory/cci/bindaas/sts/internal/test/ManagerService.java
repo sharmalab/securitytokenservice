@@ -1,12 +1,14 @@
 package edu.emory.cci.bindaas.sts.internal.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.*;
+import org.junit.Test;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.google.gson.JsonObject;

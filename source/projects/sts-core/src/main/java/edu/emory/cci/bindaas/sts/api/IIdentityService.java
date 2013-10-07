@@ -19,7 +19,7 @@ public interface IIdentityService {
 	public SecureToken issueToken(Credential credential , String serviceProvider) throws IdentityProviderException,AuthenticationException;
 	public boolean validateToken(SecureToken secureToken) throws IdentityProviderException;
 	public boolean authenticate(Credential credential) throws IdentityProviderException,AuthenticationException;
-	
+	public User lookupUserByName(String username) throws IdentityProviderException;
 	public Collection<User> getUsers() throws IdentityProviderException;
 	public Collection<Group> getGroups() throws IdentityProviderException;
 	public User addUser(String username,Collection<String> groups) throws IdentityProviderException;

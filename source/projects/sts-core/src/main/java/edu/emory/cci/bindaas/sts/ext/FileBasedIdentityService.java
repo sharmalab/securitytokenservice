@@ -196,4 +196,11 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 		return allowedOperations.contains(serviceOperation);
 	}
 
+
+	public User lookupUserByName(String username)
+			throws IdentityProviderException {
+		
+		return this.users.get(username);
+	}
+
 }

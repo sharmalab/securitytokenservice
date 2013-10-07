@@ -22,6 +22,16 @@
 			<artifactId>bindaas-sts-opensaml</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.velocity</groupId>
+					<artifactId>velocity</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>velocity</groupId>
+					<artifactId>velocity</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -34,14 +44,42 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>bindaas-sts</groupId>
 			<artifactId>bindaas-sts-cxf-wrapper</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.velocity</groupId>
+					<artifactId>velocity</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.http.jetty</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openid4java</groupId>
+			<artifactId>openid4java</artifactId>
+			<version>0.9.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -73,7 +111,10 @@
 							are under ".internal" -->
 						<Export-Package>edu.emory.cci.bindaas.sts.service.*;version="${project.version}",edu.emory.cci.bindaas.sts.util.*;version="${project.version}",edu.emory.cci.bindaas.sts.api.*;version="${project.version}"</Export-Package>
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.bundle.Activator</Bundle-Activator>
-						<Import-Package>edu.emory.cci.bindaas.sts.cxf.core,javax.ws.rs.ext,javax.ws.rs.core,javax.ws.rs,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",!*</Import-Package>
+						<Import-Package>edu.emory.cci.bindaas.sts.cxf.core,javax.ws.rs.ext,javax.ws.rs.core,javax.ws.rs,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",org.osgi.service.http;version="1.2.0",
+							javax.servlet.http;version="1.2.0",!*
+
+						</Import-Package>
 						<Private-Package>edu.emory.cci.bindaas.sts.bundle</Private-Package>
 
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
