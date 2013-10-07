@@ -1,4 +1,4 @@
-package edu.emory.cci.bindaas.lite.util;
+package edu.emory.cci.bindaas.sts.util;
 
 import java.util.Map;
 import java.util.Properties;

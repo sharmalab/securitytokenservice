@@ -1,4 +1,4 @@
-package edu.emory.cci.bindaas.sts.internal.web.view.openid;
+package edu.emory.cci.bindaas.sts.internal.web.common.openid;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.Template;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.AuthSuccess;
 import org.openid4java.message.Message;
@@ -28,6 +29,7 @@ import org.openid4java.message.sreg.SRegResponse;
 import org.openid4java.server.ServerManager;
 
 import edu.emory.cci.bindaas.sts.api.model.User;
+import edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper;
 
 public class OpenIdHelper {
 	  
@@ -57,7 +59,7 @@ public class OpenIdHelper {
 	    log.trace("logRequestParameters() BEGIN...");
 	    if (log.isDebugEnabled()) {
 	      log.debug("Dumping request parameters:");
-	      List<Parameter> paramList = request.getParameters();
+	      List<Parameter> paramList =  request.getParameters();
 	      for (Parameter parameter : paramList) {
 	        log.debug(parameter.getKey() + ":" + parameter.getValue());
 	      }
@@ -66,34 +68,38 @@ public class OpenIdHelper {
 	  }
 
 	 
-	  
-	  /**
-	   * TODO: implement this using Velocity Template
-	   * @return
-	   */
-	  public static String createXrdsResponse(String opEndpointUrl) {
-	    log.trace("createXrdsResponse() BEGIN...");
-//	    XrdsDocumentBuilder documentBuilder = new XrdsDocumentBuilder();
-//	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/server", OpenIdProviderService.getOpEndpointUrl(), "10");
-//	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/signon", OpenIdProviderService.getOpEndpointUrl(), "20");
-//	    documentBuilder.addServiceElement(AxMessage.OPENID_NS_AX, OpenIdProviderService.getOpEndpointUrl(), "30");
-//	    documentBuilder.addServiceElement(SRegMessage.OPENID_NS_SREG, OpenIdProviderService.getOpEndpointUrl(), "40");
-	    
-	    
-	    log.trace("createXrdsResponse() BEGIN...");
-	    return null;
-	  }
+//	  
+//	  /**
+//	   * TODO: implement this using Velocity Template
+//	   * @return
+//	   */
+//	  public static String createXrdsResponse(Template wrapper , String opEndpointUrl) {
+//	    log.trace("createXrdsResponse() BEGIN...");
+////	    XrdsDocumentBuilder documentBuilder = new XrdsDocumentBuilder();
+////	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/server", OpenIdProviderService.getOpEndpointUrl(), "10");
+////	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/signon", OpenIdProviderService.getOpEndpointUrl(), "20");
+////	    documentBuilder.addServiceElement(AxMessage.OPENID_NS_AX, OpenIdProviderService.getOpEndpointUrl(), "30");
+////	    documentBuilder.addServiceElement(SRegMessage.OPENID_NS_SREG, OpenIdProviderService.getOpEndpointUrl(), "40");
+//	    
+//	    
+//	    log.trace("createXrdsResponse() BEGIN...");
+//	    return null;
+//	  }
 
 	  
 
 	  public static void sendDirectResponse(HttpServletResponse response, Message message) throws IOException {
-	    log.trace("sendPlainTextResponse() BEGIN...");
 	    response.setContentType("text/plain");
 	    OutputStream os = response.getOutputStream();
 	    os.write(message.keyValueFormEncoding().getBytes());
-	    os.close();
-	    log.trace("sendPlainTextResponse() END...");
+	    response.flushBuffer();
 	  }
+	  
+	  public static void sendIndirectResponse(HttpServletResponse response, Message message) throws IOException {
+		    response.sendRedirect(message.getDestinationUrl(true));
+		  }
+	  
+	  
 
 	  /**
 	   * This is where the bulk of the action happens. Once the handshaking is

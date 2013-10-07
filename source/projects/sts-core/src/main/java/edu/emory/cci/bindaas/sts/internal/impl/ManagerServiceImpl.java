@@ -141,6 +141,8 @@ public class ManagerServiceImpl  implements IManagerService{
 	public IIdentityService getService(String id)
 			throws IdentityProviderException, IdentityServiceNotFoundException {
 				// lookup ServiceReg corresponding to id
+				if( id == null) throw new IdentityProviderException("null");
+				
 				IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
 				if(serviceRegistration!=null)
 				{

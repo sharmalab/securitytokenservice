@@ -1,6 +1,9 @@
-package edu.emory.cci.bindaas.sts.internal.web.view.openid;
+package edu.emory.cci.bindaas.sts.internal.web.common.openid;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,8 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.openid4java.message.AuthImmediateFailure;
 import org.openid4java.message.Message;
-import org.openid4java.message.MessageException;
 import org.openid4java.message.ParameterList;
 import org.openid4java.server.InMemoryServerAssociationStore;
 import org.openid4java.server.ServerManager;
@@ -24,13 +31,16 @@ import com.google.gson.annotations.Expose;
 
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.AuthenticationException;
-import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityServiceNotFoundException;
 import edu.emory.cci.bindaas.sts.api.model.Credential;
 import edu.emory.cci.bindaas.sts.api.model.User;
 import edu.emory.cci.bindaas.sts.internal.web.GeneralServlet;
+import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage;
+import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage.HTTPError;
+import edu.emory.cci.bindaas.sts.internal.web.common.UserLoginPage;
 import edu.emory.cci.bindaas.sts.service.IManagerService;
 import edu.emory.cci.bindaas.sts.util.GSONUtil;
+import edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper;
 
 /**
  * registered at : /client/openid/*
@@ -44,7 +54,65 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	private Map<String,ServerManager> serverManagerCache;
 	private IManagerService managerService;
 	private Integer sessionMaxInactiveInterval;
+	private UserLoginPage loginPage;
+	private Log log = LogFactory.getLog(getClass());
+	private Template xrdsTemplate;
+	private String xrdsTemplateName;
+	private Template seekUserApprovalTemplate;
+	private String seekUserApprovalTemplateName;
+	private VelocityEngineWrapper velocityEngineWrapper;
+	private ErrorPage errorPage;
 	
+	
+	
+	public String getSeekUserApprovalTemplateName() {
+		return seekUserApprovalTemplateName;
+	}
+
+	public void setSeekUserApprovalTemplateName(String seekUserApprovalTemplateName) {
+		this.seekUserApprovalTemplateName = seekUserApprovalTemplateName;
+	}
+
+	public String getXrdsTemplateName() {
+		return xrdsTemplateName;
+	}
+
+	public void setXrdsTemplateName(String xrdsTemplateName) {
+		this.xrdsTemplateName = xrdsTemplateName;
+	}
+
+	public ErrorPage getErrorPage() {
+		return errorPage;
+	}
+
+	public void setErrorPage(ErrorPage errorPage) {
+		this.errorPage = errorPage;
+	}
+
+	public Template getXrdsTemplate() {
+		return xrdsTemplate;
+	}
+
+	public void setXrdsTemplate(Template xrdsTemplate) {
+		this.xrdsTemplate = xrdsTemplate;
+	}
+
+	public VelocityEngineWrapper getVelocityEngineWrapper() {
+		return velocityEngineWrapper;
+	}
+
+	public void setVelocityEngineWrapper(VelocityEngineWrapper velocityEngineWrapper) {
+		this.velocityEngineWrapper = velocityEngineWrapper;
+	}
+
+	public UserLoginPage getLoginPage() {
+		return loginPage;
+	}
+
+	public void setLoginPage(UserLoginPage loginPage) {
+		this.loginPage = loginPage;
+	}
+
 	public IManagerService getManagerService() {
 		return managerService;
 	}
@@ -64,6 +132,8 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	public void init()
 	{
 		serverManagerCache = new HashMap<String, ServerManager>();
+		xrdsTemplate = velocityEngineWrapper.getVelocityTemplateByName(xrdsTemplateName);
+		seekUserApprovalTemplate = velocityEngineWrapper.getVelocityTemplateByName(seekUserApprovalTemplateName);
 	}
 
 	@Override
@@ -78,11 +148,34 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		processRequest(req, resp);
 	}
 	
+	private String extractIdentityServiceIdFromRequest(HttpServletRequest req)
+	{
+	
+	try {
+			URI uri = new URI(req.getRequestURL().toString());
+			String path = uri.getPath();
+			String servletRegPath = getServletUrl();
+			String[] tokenz = path.split(servletRegPath);
+			String trailingSuffix = tokenz[1];
+			String pathSegments[] = trailingSuffix.split("/");
+			return pathSegments[0];
+			
+			
+		}catch(Exception e)
+		{
+			log.error("Unable to extract IdentityServiceID from request " , e);
+			return null;
+		}
+		
+	}
+	
 	private void processRequest(HttpServletRequest req , HttpServletResponse resp)
 	{
-		String identityServiceId = null; // extract identity service name 
-		try {
+		// extract identity service name
+		String identityServiceId = extractIdentityServiceIdFromRequest(req);  
+	try {
 		
+		IIdentityService identityService = 	managerService.getService(identityServiceId);
 		ServerManager serverManager = null;
 		if(serverManagerCache.containsKey(identityServiceId))
 		{
@@ -91,21 +184,22 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		else
 		{
 			serverManager = new ServerManager();
-			serverManager.setOPEndpointUrl(req.getServletPath());
+			serverManager.setOPEndpointUrl(req.getRequestURL().toString());
 			serverManager.setPrivateAssociations(new InMemoryServerAssociationStore());
 		    serverManager.setSharedAssociations(new InMemoryServerAssociationStore());
 		    this.serverManagerCache.put(identityServiceId, serverManager);
 		}
 		
-		IIdentityService identityService = 	managerService.getService(identityServiceId);
+		log.debug("Serving OpenID request for [" + identityService.getRegistrationInfo().getName() + "]");
+		
 		processRequest(serverManager, identityService, req , resp);
 		
-		} catch (IdentityProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(); // throw 500 internal server error
 		} catch (IdentityServiceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(); // throw 404 page not found
+			errorPage.showErrorPage(resp, HTTPError.PAGE_NOT_FOUND, "This page does not exist", null , e);
+		}
+		catch (Exception e)
+		{
+			errorPage.showErrorPage(resp, HTTPError.INTERNAL_SERVER_ERROR, e.getMessage() , "Please contact server administrator" , e);
 		}
 	}
 	
@@ -117,6 +211,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
         if(m!=null){
         	try {
 		        	Mode mode = Mode.valueOf(m);
+		        	log.debug("Processing openid.mode [" + mode + "]");
 		        	switch(mode)
 		    		{
 		    			case associate : processAssociationRequest(serverManager,parameterList, req,resp);break;
@@ -132,27 +227,31 @@ public class OpenIDEndpointServlet extends GeneralServlet{
         	
         }else{
         	// assume discovery request
-        	String xrdsResponse = OpenIdHelper.createXrdsResponse(serverManager.getOPEndpointUrl());
+        	log.debug("Sending discovery response");
+        	writeXrdsResponse(resp.getWriter() , serverManager.getOPEndpointUrl());
         	resp.setContentType("application/xrds+xml");
-        	resp.getWriter().append(xrdsResponse);
-        	resp.getWriter().close();
+        	resp.flushBuffer();
         	return;
         }
 	}
-	protected void processRequest(ServerManager serverManager , IIdentityService identityService ,HttpServletRequest req, HttpServletResponse resp ) throws IdentityProviderException
+	
+	
+	private void writeXrdsResponse(Writer writer , String opEndpointUrl) throws IOException
+	{
+		VelocityContext context = velocityEngineWrapper.createVelocityContext();
+		context.put("opEndpointUrl", opEndpointUrl);
+		xrdsTemplate.merge(context, writer);
+	}
+	
+	protected void processRequest(ServerManager serverManager , IIdentityService identityService ,HttpServletRequest req, HttpServletResponse resp ) throws Exception
 	{
 		try {
 		
 			Action action = null ; 
 			try{
+				
 				action = Action.valueOf(req.getParameter("action").toString());
-			}
-			catch(Exception e){
-				// either null or invalid action specified
-			}
-			
-			if(action!=null)
-			{
+				log.debug("Serving Action [" + action + "]");
 				switch(action)
 				{
 					case authenticate : handleUserAuthentication(serverManager , identityService , req , resp) ; break;
@@ -162,17 +261,17 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 					
 				}
 			}
-			else
-			{
+			catch(Exception e){
+				
 				ParameterList parameterList = new ParameterList(req.getParameterMap());
-				processRequest(serverManager, identityService,parameterList,req,resp);				
+				processRequest(serverManager, identityService,parameterList,req,resp);
 			}
 		
 		}
 		
 		catch(Exception e)
 		{
-			throw new IdentityProviderException("Request cannot be fulfilled", e);
+			throw new Exception("Request cannot be fulfilled", e);
 		}
 	}
 	
@@ -225,11 +324,13 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 					}
 					
 					sessionContext.attributeReleased = attributeRequested;
+					sessionContext.setAuthorizedByUser(true);
+					processRequest(serverManager, identityService, sessionContext.parameterList, req, resp);
 				}
 				{
-					// user denied release of attributes. handle this . TODO:
+					// user denied release of attributes. handle this .
 					Message cancelled = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
-					resp.sendRedirect(cancelled.getDestinationUrl(true));
+					OpenIdHelper.sendIndirectResponse(resp, cancelled);
 				}
 			}
 			else
@@ -253,7 +354,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		{
 			OpenIDSessionContext sessionContext = OpenIDSessionContext.class.cast(session.getAttribute("context"));
 			Message cancelled = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
-			resp.sendRedirect(cancelled.getDestinationUrl(true));
+			OpenIdHelper.sendIndirectResponse(resp, cancelled);
 		}
 		else
 		{
@@ -274,6 +375,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			String password = req.getParameter("password");
 			
 			Credential credential = new Credential(username, password);
+			log.debug("validating user credentials");
 			if(identityService.authenticate(credential))
 			{
 				User user = identityService.lookupUserByName(username);
@@ -292,7 +394,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			{
 				// login again
 				// display login page with error message
-				showLoginPage(req, resp, "Invalid username or password");
+				showLoginPage(req, resp, "Invalid username or password" , identityService);
 			}
 			
 		}
@@ -306,7 +408,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		{
 			// login again
 			// display login page with error message
-			showLoginPage(req, resp, "Invalid username or password");
+			showLoginPage(req, resp, "Invalid username or password" , identityService);
 		}
 	}
 
@@ -314,16 +416,39 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	
 	private void processCheckIdImmediate(ServerManager serverManager,
 			IIdentityService identityService, ParameterList parameterList,
-			HttpServletRequest req, HttpServletResponse resp) {
-		// TODO Auto-generated method stub
+			HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		HttpSession session  = req.getSession();
+		OpenIDSessionContext sessionContext = session.getAttribute("context") !=null ? OpenIDSessionContext.class.cast(session.getAttribute("context")) : null;
+		
+		if(sessionContext.isLoggedIn() && sessionContext.isAuthorizedByUser())
+		{
+			// user logged in so respond with +ve response
+			Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.user, sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, new HashSet<Attribute>());
+			OpenIdHelper.sendIndirectResponse(resp, message);
+		}
+		{
+			// respond with direct error message : setup_needed
+			Message message = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
+			if(message instanceof AuthImmediateFailure)
+			{
+				OpenIdHelper.sendDirectResponse(resp, message);
+			}
+			else
+			{
+				throw new Exception("Expecting OpenID4Java to return instanceof AuthImmediateFailure. Found [" + message.getClass().getName() + "]");
+			}
+			
+		}
 		
 	}
+	
 
 	private void processAssociationRequest(ServerManager serverManager,ParameterList parameterList,
 			HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
 		Message message = OpenIdHelper.processAssociationRequest(serverManager, parameterList);
 		OpenIdHelper.sendDirectResponse(resp, message);
+		log.debug("Sent Association Response");
 	}
 
 	private void processAuthenticationRequest(ServerManager serverManager,ParameterList parameterList,
@@ -331,25 +456,27 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 
 		Message message = serverManager.verify(parameterList);
 		OpenIdHelper.sendDirectResponse(resp, message);
-		
+		log.debug("Sent Authentication Response");
 	}
 
 	private void showLoginPage(HttpServletRequest req,
-			HttpServletResponse resp , String optionalErrorMessage)
+			HttpServletResponse resp , String optionalErrorMessage , IIdentityService identityService) throws Exception
 	{
-		// TODO
+			String actionUrl = req.getRequestURL().toString()  + "?action=" + Action.authenticate;
+			loginPage.showLoginPage(resp, actionUrl, String.format("%s OpenID Login Service", identityService.getRegistrationInfo().getName()), "OpendID Login", optionalErrorMessage);
 	}
 	
 	
 	private void processCheckIdSetup(ServerManager serverManager,
 			IIdentityService identityService,ParameterList parameterList, HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, MessageException {
+			HttpServletResponse resp) throws Exception {
 		
 		HttpSession session  = req.getSession();
 		OpenIDSessionContext sessionContext = session.getAttribute("context") !=null ? OpenIDSessionContext.class.cast(session.getAttribute("context")) : null;
 		
 		if(sessionContext == null)
 		{
+			log.debug("New session detected. Setting context information");
 			sessionContext = new OpenIDSessionContext();
 			session.setAttribute("context", sessionContext);
 			session.setMaxInactiveInterval(sessionMaxInactiveInterval);
@@ -358,28 +485,31 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		if(sessionContext.isLoggedIn())
 		{
 			// no need to login again
+			log.debug("[" + sessionContext.user.getName() + "] already logged in. No need login again");
 			if(sessionContext.isAuthorizedByUser && sessionContext.parameterList.equals(parameterList))
 			{
 				// authorized by user earlier and requesting same information as before
-				
+				log.debug("[" + sessionContext.user.getName() + "] already authorized response");
 				Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
-				OpenIdHelper.sendDirectResponse(resp, message);
+				OpenIdHelper.sendIndirectResponse(resp, message);
 			}
 			else if(sessionContext.parameterList.equals(parameterList) == false)
 			{
 				// authorized by user earlier but requesting different set of information 
+				
 				if(OpenIdHelper.isSubset(serverManager , parameterList, sessionContext.parameterList))
 				{
 					// request is seeking only a subset of attributes from last time - hence allow
 					Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
-					OpenIdHelper.sendDirectResponse(resp, message);
+					OpenIdHelper.sendIndirectResponse(resp, message);
 				}
 				else
 				{
 					// request is seeking more attributes than user authorized last time. User approval necessary
+					log.debug("[" + sessionContext.user.getName() + "] need to re-authorize attribute release");
 					sessionContext.parameterList = parameterList;
 					Map<Attribute,Boolean> attributeRequested = OpenIdHelper.getAttributeRequested(serverManager, parameterList);
-					showSeekApprovalPage(req, resp , attributeRequested);
+					showSeekApprovalPage( resp , sessionContext.user , sessionContext.parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
 				}
 			}
 			else
@@ -389,16 +519,18 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 				if(attributeRequested.size() > 0)
 				{
 					// seek approval
+					log.debug("[" + sessionContext.user.getName() + "] need to authorize attribute release");
 					sessionContext.parameterList = parameterList;
-					showSeekApprovalPage(req, resp , attributeRequested);
+					showSeekApprovalPage( resp , sessionContext.user , sessionContext.parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
 				}
 				else
 				{
 					// no approval necessary as no attributes were requested
+					log.debug("[" + sessionContext.user.getName() + "] : no attributes to release");
 					sessionContext.parameterList = parameterList;
 					sessionContext.setAuthorizedByUser(true);
 					Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
-					OpenIdHelper.sendDirectResponse(resp, message);
+					OpenIdHelper.sendIndirectResponse(resp, message);
 				}
 				
 			}
@@ -408,14 +540,23 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		{
 			// user not logged In . Show login page
 			sessionContext.parameterList = parameterList;
-			showLoginPage(req, resp, null);
+			showLoginPage(req, resp, null , identityService);
 		}
 		
 	}
 	
-	protected void showSeekApprovalPage(HttpServletRequest req, HttpServletResponse resp , Map<Attribute,Boolean> attributeRequested)
+	protected void showSeekApprovalPage(HttpServletResponse resp , User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws Exception
 	{
-		// TODO : show seek approval page
+
+		URL relyingParty = new URL(relyingPartyUrl);
+		VelocityContext context = velocityEngineWrapper.createVelocityContext();
+		context.put("user", user);
+		context.put("attributeRequested", attributeRequested);
+		context.put("relyingParty", relyingParty.getHost());
+		
+		seekUserApprovalTemplate.merge(context, resp.getWriter());
+		resp.flushBuffer();
+		
 	}
 
 	public static enum Mode {associate, checkid_setup, checkid_immediate, check_authentication}
