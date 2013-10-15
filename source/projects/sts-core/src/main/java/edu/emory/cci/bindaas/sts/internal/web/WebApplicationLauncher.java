@@ -19,6 +19,17 @@ public class WebApplicationLauncher {
 	private List<WebAppInitializer> listOfAppInitializers;
 	private Log log = LogFactory.getLog(getClass());
 	
+	public List<WebAppInitializer> getListOfAppInitializers() {
+		return listOfAppInitializers;
+	}
+
+
+	public void setListOfAppInitializers(
+			List<WebAppInitializer> listOfAppInitializers) {
+		this.listOfAppInitializers = listOfAppInitializers;
+	}
+
+
 	public void init() throws Exception
 	{
 		// register all servlets,filters,etc

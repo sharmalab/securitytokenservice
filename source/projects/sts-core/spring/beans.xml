@@ -34,6 +34,60 @@
 </bean>
 
 
+<!-- Velocity -->
+<bean id="velocityWrapper" class="edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper" init-method="init">
+	<property name="props">
+		<props>
+			<prop key="resource.loader">class</prop>
+			<prop key="class.resource.loader.class">org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader</prop>
+		</props>
+	</property>
+</bean>
+
+<!-- WebApp -->
+<bean id="webAppLauncher" class="edu.emory.cci.bindaas.sts.internal.web.WebApplicationLauncher" init-method="init">
+	<property name="listOfAppInitializers">
+		<list>
+			<ref bean="openIDWebApp"/>
+		</list>
+	</property>
+</bean>
+
+<bean id="errorPage" class="edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage" init-method="init">
+	<property name="templateName" value="errorPage.vt.html"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+<bean id="loginPage" class="edu.emory.cci.bindaas.sts.internal.web.common.UserLoginPage" init-method="init">
+	<property name="templateName" value="loginPage.vt.html"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+
+<!-- OpenID -->
+<bean id="openIDWebApp" class="edu.emory.cci.bindaas.sts.internal.web.WebAppInitializer" >
+	<property name="moduleName" value="OpenID Web Application"></property>
+	<property name="listOfServlets">
+		<list>
+			<ref bean="opEndpoint"/>		
+		</list>
+	</property>
+</bean>
+
+<bean id="opEndpoint" class="edu.emory.cci.bindaas.sts.internal.web.common.openid.OpenIDEndpointServlet">
+	<property name="errorPage" ref="errorPage"></property>
+	<property name="loginPage" ref="loginPage"></property>
+	<property name="managerService" ref="managerService"></property>
+	<property name="seekUserApprovalTemplateName" value="seekUserApproval.vt.html"></property>
+	<property name="servletUrl" value="/client/openid"></property>
+	<property name="sessionMaxInactiveInterval" value="36000"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="xrdsTemplateName" value="xrds.vt"></property>	
+	
+</bean>
+
+
+
 <osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
 <osgi:service interface="edu.emory.cci.bindaas.sts.service.IManagerService" ref="managerService"></osgi:service>
 <osgi:service interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" ref="configurationService"></osgi:service>

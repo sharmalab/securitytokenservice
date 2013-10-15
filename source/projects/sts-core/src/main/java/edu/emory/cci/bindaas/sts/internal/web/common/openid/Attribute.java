@@ -125,8 +125,8 @@ BIRTH_MONTH("Birth Month" , "birth_month" , "http://openid.net/schema/birthDate/
 	
 	
 	
-	private  static Map<String,Attribute> sregLookupTable = new HashMap<String, Attribute>();
-	private  static Map<String,Attribute> axLookupTable = new HashMap<String, Attribute>();
+	private  static Map<String,Attribute> sregLookupTable ;
+	private  static Map<String,Attribute> axLookupTable ;
 	private final static String CUSTOM_NS = "http://cci.emory.edu/schema/compatability/sreg";
 	
 	Attribute (String commonName , String sregName , String axSchema , ValueExtractor valueExtractor)
@@ -143,11 +143,15 @@ BIRTH_MONTH("Birth Month" , "birth_month" , "http://openid.net/schema/birthDate/
 	
 	private static void updateSregLookup(String sregName , Attribute attr)
 	{
+		if(sregLookupTable == null) 
+			sregLookupTable = new HashMap<String, Attribute>();
 		sregLookupTable.put(sregName, attr);
 	}
 	
 	private static void updateAxLookup(String axSchema , Attribute attr)
 	{
+		if(axLookupTable == null) 
+			axLookupTable = new HashMap<String, Attribute>();
 		axLookupTable.put(axSchema, attr);
 	}
 	

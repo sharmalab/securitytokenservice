@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +37,7 @@ import edu.emory.cci.bindaas.sts.internal.web.GeneralServlet;
 import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage;
 import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage.HTTPError;
 import edu.emory.cci.bindaas.sts.internal.web.common.UserLoginPage;
+import edu.emory.cci.bindaas.sts.internal.web.common.openid.OpenIDSession.RelyingPartyContext;
 import edu.emory.cci.bindaas.sts.service.IManagerService;
 import edu.emory.cci.bindaas.sts.util.GSONUtil;
 import edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper;
@@ -62,8 +62,6 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	private String seekUserApprovalTemplateName;
 	private VelocityEngineWrapper velocityEngineWrapper;
 	private ErrorPage errorPage;
-	
-	
 	
 	public String getSeekUserApprovalTemplateName() {
 		return seekUserApprovalTemplateName;
@@ -134,6 +132,8 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		serverManagerCache = new HashMap<String, ServerManager>();
 		xrdsTemplate = velocityEngineWrapper.getVelocityTemplateByName(xrdsTemplateName);
 		seekUserApprovalTemplate = velocityEngineWrapper.getVelocityTemplateByName(seekUserApprovalTemplateName);
+		
+		log.debug(getClass().getName() + " initialized");
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			URI uri = new URI(req.getRequestURL().toString());
 			String path = uri.getPath();
 			String servletRegPath = getServletUrl();
-			String[] tokenz = path.split(servletRegPath);
+			String[] tokenz = path.split(servletRegPath + "/");
 			String trailingSuffix = tokenz[1];
 			String pathSegments[] = trailingSuffix.split("/");
 			return pathSegments[0];
@@ -187,6 +187,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			serverManager.setOPEndpointUrl(req.getRequestURL().toString());
 			serverManager.setPrivateAssociations(new InMemoryServerAssociationStore());
 		    serverManager.setSharedAssociations(new InMemoryServerAssociationStore());
+		    serverManager.setEnforceRpId(false); // TODO : change it to true and solve xerces class not found issue.
 		    this.serverManagerCache.put(identityServiceId, serverManager);
 		}
 		
@@ -195,7 +196,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		processRequest(serverManager, identityService, req , resp);
 		
 		} catch (IdentityServiceNotFoundException e) {
-			errorPage.showErrorPage(resp, HTTPError.PAGE_NOT_FOUND, "This page does not exist", null , e);
+			errorPage.showErrorPage(resp, HTTPError.PAGE_NOT_FOUND, "Page does not exist", "Please check the URL and try again" , e);
 		}
 		catch (Exception e)
 		{
@@ -228,50 +229,47 @@ public class OpenIDEndpointServlet extends GeneralServlet{
         }else{
         	// assume discovery request
         	log.debug("Sending discovery response");
-        	writeXrdsResponse(resp.getWriter() , serverManager.getOPEndpointUrl());
+        	
+        	if(req.getParameter("id")!=null)
+        		writeXrdsResponse(resp.getWriter() , serverManager.getOPEndpointUrl() , true);
+        	else
+        		writeXrdsResponse(resp.getWriter() , serverManager.getOPEndpointUrl() , false);
         	resp.setContentType("application/xrds+xml");
         	resp.flushBuffer();
         	return;
         }
 	}
 	
-	
-	private void writeXrdsResponse(Writer writer , String opEndpointUrl) throws IOException
+	private void writeXrdsResponse(Writer writer , String opEndpointUrl, boolean isLocalDiscovery) throws IOException
 	{
 		VelocityContext context = velocityEngineWrapper.createVelocityContext();
 		context.put("opEndpointUrl", opEndpointUrl);
+		context.put("localDiscovery", isLocalDiscovery);
 		xrdsTemplate.merge(context, writer);
 	}
 	
 	protected void processRequest(ServerManager serverManager , IIdentityService identityService ,HttpServletRequest req, HttpServletResponse resp ) throws Exception
 	{
-		try {
-		
-			Action action = null ; 
-			try{
+		Action action = null ; 
+		try{
+			String act = req.getParameter("action")!=null ? req.getParameter("action").toString() : "";
+			action = Action.valueOf(act);
+			log.debug("Serving Action [" + action + "]");
+			
+			switch(action)
+			{
+				case authenticate : handleUserAuthentication(serverManager , identityService , req , resp) ; break;
+				case seekApproval : handleSeekApproval(serverManager , identityService , req , resp) ; break;
+				case logout : handleLogout(serverManager , identityService , req , resp) ; break;
+				case cancelled : handleUserCancellation(serverManager,identityService, req, resp) ; break;
 				
-				action = Action.valueOf(req.getParameter("action").toString());
-				log.debug("Serving Action [" + action + "]");
-				switch(action)
-				{
-					case authenticate : handleUserAuthentication(serverManager , identityService , req , resp) ; break;
-					case seekApproval : handleSeekApproval(serverManager , identityService , req , resp) ; break;
-					case logout : handleLogout(serverManager , identityService , req , resp) ; break;
-					case cancelled : handleUserCancellation(serverManager, req, resp) ; break;
-					
-				}
 			}
-			catch(Exception e){
-				
-				ParameterList parameterList = new ParameterList(req.getParameterMap());
-				processRequest(serverManager, identityService,parameterList,req,resp);
-			}
-		
 		}
-		
-		catch(Exception e)
-		{
-			throw new Exception("Request cannot be fulfilled", e);
+		catch(IllegalArgumentException e){
+			
+			ParameterList parameterList = new ParameterList(req.getParameterMap());
+			OpenIdHelper.logRequestParameters(parameterList);
+			processRequest(serverManager, identityService,parameterList,req,resp);
 		}
 	}
 	
@@ -287,10 +285,12 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			IIdentityService identityService, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
 		
-		HttpSession session = req.getSession();
-		if(session.getAttribute("context")!=null)
+		OpenIDSession openidSession = OpenIDSession.getOpenIDSessionContext(req , identityService.getRegistrationInfo().getId());
+		String relyingParty = req.getParameter("relyingParty");
+		RelyingPartyContext relyingPartyContext;
+		if(openidSession !=null && relyingParty !=null && (relyingPartyContext = openidSession.lookupRelyingParty(relyingParty))!=null )
 		{
-			OpenIDSessionContext sessionContext = OpenIDSessionContext.class.cast(session.getAttribute("context"));
+			
 			String response = req.getParameter("response");
 			if(response!=null)
 			{
@@ -312,7 +312,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 						}
 					}
 					
-					Map<Attribute,Boolean> attributeRequested = OpenIdHelper.getAttributeRequested(serverManager, sessionContext.parameterList);
+					Map<Attribute,Boolean> attributeRequested = OpenIdHelper.getAttributeRequested(serverManager, relyingPartyContext.getParameterList());
 					Iterator<Entry<Attribute, Boolean>> iter = attributeRequested.entrySet().iterator();
 					while(iter.hasNext())
 					{
@@ -323,14 +323,15 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 						}
 					}
 					
-					sessionContext.attributeReleased = attributeRequested;
-					sessionContext.setAuthorizedByUser(true);
-					processRequest(serverManager, identityService, sessionContext.parameterList, req, resp);
+					relyingPartyContext.setAttributeReleased(attributeRequested);
+					relyingPartyContext.setAuthorizedByUser(true);
+					processRequest(serverManager, identityService, relyingPartyContext.getParameterList(), req, resp);
 				}
 				{
 					// user denied release of attributes. handle this .
-					Message cancelled = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
+					Message cancelled = serverManager.authResponse(relyingPartyContext.getParameterList(), openidSession.getUserSelectedId(), openidSession.getUserSelectedClaimedId(), false);
 					OpenIdHelper.sendIndirectResponse(resp, cancelled);
+					return;
 				}
 			}
 			else
@@ -342,93 +343,107 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		else
 		{
 			// invalid state . no valid session found
-			throw new Exception("Illegal request. OpenIDSessionContext must be set in order to proceed");
+			throw new Exception("Illegal request. OpenIDSession must be set in order to proceed");
 		}
 				
 	}
 	
-	private void handleUserCancellation(ServerManager serverManager , HttpServletRequest req , HttpServletResponse resp) throws Exception
+	private void handleUserCancellation(ServerManager serverManager ,IIdentityService identityService , HttpServletRequest req , HttpServletResponse resp) throws Exception
 	{
-		HttpSession session = req.getSession();
-		if(session.getAttribute("context")!=null)
+		OpenIDSession openidSession = OpenIDSession.getOpenIDSessionContext(req , identityService.getRegistrationInfo().getId());
+		String relyingParty = req.getParameter("relyingParty");
+		RelyingPartyContext relyingPartyContext;
+		if(openidSession !=null && relyingParty !=null && (relyingPartyContext = openidSession.lookupRelyingParty(relyingParty))!=null )
 		{
-			OpenIDSessionContext sessionContext = OpenIDSessionContext.class.cast(session.getAttribute("context"));
-			Message cancelled = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
+			Message cancelled = serverManager.authResponse(relyingPartyContext.getParameterList(), openidSession.getUserSelectedId() , openidSession.getUserSelectedClaimedId() , false);
 			OpenIdHelper.sendIndirectResponse(resp, cancelled);
+			return;
 		}
 		else
 		{
-			throw new Exception("Illegal request. OpenIDSessionContext must be set in order to proceed");
+			throw new Exception("Illegal request. OpenIDSession must be set in order to proceed");
 		}
 	}
 
 	private void handleUserAuthentication(ServerManager serverManager,
 			IIdentityService identityService, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
-		try {
-			
-		HttpSession session = req.getSession();
-		if(session.getAttribute("context")!=null)
-		{
-			OpenIDSessionContext sessionContext = OpenIDSessionContext.class.cast(session.getAttribute("context"));
-			String username = req.getParameter("username");
-			String password = req.getParameter("password");
-			
-			Credential credential = new Credential(username, password);
-			log.debug("validating user credentials");
-			if(identityService.authenticate(credential))
-			{
-				User user = identityService.lookupUserByName(username);
-				String userSelectedId = serverManager.getOPEndpointUrl();
-				String userSelectedClaimedId = String.format("%s?id=%s" , userSelectedId , user.getName());
-				
-				sessionContext.isLoggedIn = true;
-				sessionContext.user = user;
-				sessionContext.userSelectedClaimedId = userSelectedClaimedId;
-				sessionContext.userSelectedId = userSelectedId;
-				
-				processRequest(serverManager, identityService,sessionContext.parameterList,req,resp);
-				
-			}
-			else
-			{
-				// login again
-				// display login page with error message
-				showLoginPage(req, resp, "Invalid username or password" , identityService);
-			}
-			
-		}
-		else
-		{
-			throw new Exception("Illegal request. OpenIDSessionContext must be set in order to proceed");
-		}
 		
-		}
-		catch(AuthenticationException authenticationException)
-		{
-			// login again
-			// display login page with error message
-			showLoginPage(req, resp, "Invalid username or password" , identityService);
-		}
-	}
 
-	
+			OpenIDSession openidSession = OpenIDSession
+					.getOpenIDSessionContext(req, identityService.getRegistrationInfo().getId());
+			String relyingParty = req.getParameter("relyingParty");
+			RelyingPartyContext relyingPartyContext;
+			if (openidSession != null
+					&& relyingParty != null
+					&& (relyingPartyContext = openidSession
+							.lookupRelyingParty(relyingParty)) != null) {
+				
+				String username = req.getParameter("username");
+				String password = req.getParameter("password");
+
+				Credential credential = new Credential(username, password);
+				log.debug("validating user credentials");
+				
+				try {
+				if (identityService.authenticate(credential)) {
+					User user = identityService.lookupUserByName(username);
+				
+					String userSelectedClaimedId = serverManager
+							.getOPEndpointUrl() + "?id=" + user.getName();
+					String userSelectedId = userSelectedClaimedId;
+
+					openidSession.setLoggedIn(true);
+					openidSession.setUser(user);
+					openidSession.setUserSelectedId(userSelectedId);
+					openidSession.setUserSelectedClaimedId(userSelectedClaimedId);
+					openidSession.setOpEndpointUrl(serverManager
+							.getOPEndpointUrl());
+					
+
+					processRequest(serverManager, identityService,
+							relyingPartyContext.getParameterList(), req, resp);
+
+				} else {
+					// login again
+					// display login page with error message
+					showLoginPage(req, resp, "Invalid username or password",
+							identityService , relyingPartyContext.getRelyingPartyDomain() );
+				}
+				}catch(AuthenticationException e)
+				{
+					log.error(e);
+					showLoginPage(req, resp, "Invalid username or password",
+							identityService , relyingPartyContext.getRelyingPartyDomain() );
+				}
+
+			} else {
+				throw new Exception(
+						"Illegal request. OpenIDSession must be set in order to proceed");
+			}
+
+	}	
 	
 	private void processCheckIdImmediate(ServerManager serverManager,
 			IIdentityService identityService, ParameterList parameterList,
 			HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		HttpSession session  = req.getSession();
-		OpenIDSessionContext sessionContext = session.getAttribute("context") !=null ? OpenIDSessionContext.class.cast(session.getAttribute("context")) : null;
 		
-		if(sessionContext.isLoggedIn() && sessionContext.isAuthorizedByUser())
+		OpenIDSession openidSession = OpenIDSession
+				.getOpenIDSessionContext(req , identityService.getRegistrationInfo().getId());
+		
+		RelyingPartyContext relyingPartyContext;
+		if (openidSession != null
+				&& (relyingPartyContext = openidSession
+						.lookupRelyingParty(parameterList)) != null && openidSession.isLoggedIn() && relyingPartyContext.isAuthorizedByUser())
 		{
 			// user logged in so respond with +ve response
-			Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.user, sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, new HashSet<Attribute>());
+			Message message = OpenIdHelper.buildAuthResponse(serverManager, openidSession.getUser(),relyingPartyContext.getParameterList(),openidSession.getUserSelectedId(), openidSession.getUserSelectedClaimedId(), new HashSet<Attribute>());
 			OpenIdHelper.sendIndirectResponse(resp, message);
+			return;
 		}
 		{
 			// respond with direct error message : setup_needed
-			Message message = serverManager.authResponse(sessionContext.parameterList, sessionContext.userSelectedId, sessionContext.userSelectedClaimedId, false);
+			Message message = serverManager.authResponse(parameterList, null , null , false); // TODO : test this scenario
 			if(message instanceof AuthImmediateFailure)
 			{
 				OpenIdHelper.sendDirectResponse(resp, message);
@@ -460,10 +475,16 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	}
 
 	private void showLoginPage(HttpServletRequest req,
-			HttpServletResponse resp , String optionalErrorMessage , IIdentityService identityService) throws Exception
+			HttpServletResponse resp , String optionalErrorMessage , IIdentityService identityService , String relyingParty) throws Exception
 	{
-			String actionUrl = req.getRequestURL().toString()  + "?action=" + Action.authenticate;
-			loginPage.showLoginPage(resp, actionUrl, String.format("%s OpenID Login Service", identityService.getRegistrationInfo().getName()), "OpendID Login", optionalErrorMessage);
+			String actionUrl = req.getRequestURL().toString() ;
+			String loginUrl = actionUrl + "?action=" + Action.authenticate.toString();
+			String cancelUrl = actionUrl + "?action=" + Action.cancelled.toString();
+			
+			Map<String,String> hiddenField = new HashMap<String, String>();
+			hiddenField.put("relyingParty", relyingParty);
+			
+			loginPage.showLoginPage(resp, loginUrl,cancelUrl, identityService.getRegistrationInfo().getName(), identityService.getRegistrationInfo().getName() , optionalErrorMessage , hiddenField);
 	}
 	
 	
@@ -471,66 +492,76 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 			IIdentityService identityService,ParameterList parameterList, HttpServletRequest req,
 			HttpServletResponse resp) throws Exception {
 		
-		HttpSession session  = req.getSession();
-		OpenIDSessionContext sessionContext = session.getAttribute("context") !=null ? OpenIDSessionContext.class.cast(session.getAttribute("context")) : null;
+		OpenIDSession openidSession = OpenIDSession.getOpenIDSessionContext(req, identityService.getRegistrationInfo().getId());
 		
-		if(sessionContext == null)
+		if(openidSession == null)
 		{
 			log.debug("New session detected. Setting context information");
-			sessionContext = new OpenIDSessionContext();
-			session.setAttribute("context", sessionContext);
-			session.setMaxInactiveInterval(sessionMaxInactiveInterval);
+			openidSession = OpenIDSession.createOpenIDSessionContext( req, identityService.getRegistrationInfo().getId() , this.sessionMaxInactiveInterval);
 		}
 		
-		if(sessionContext.isLoggedIn())
+		RelyingPartyContext relyingPartyContext = openidSession.lookupRelyingParty(parameterList);
+		
+		if(relyingPartyContext == null)
+		{
+			relyingPartyContext = openidSession.addRelyingParty(parameterList);
+			log.debug("Adding new relying party [" + relyingPartyContext + "]");
+		}
+		
+		if(openidSession.isLoggedIn())
 		{
 			// no need to login again
-			log.debug("[" + sessionContext.user.getName() + "] already logged in. No need login again");
-			if(sessionContext.isAuthorizedByUser && sessionContext.parameterList.equals(parameterList))
+			log.debug("[" + openidSession.getUser().getName() + "] already logged in. No need login again");
+			if(relyingPartyContext!=null &&   relyingPartyContext.isAuthorizedByUser() && relyingPartyContext.getParameterList().equals(parameterList))
 			{
 				// authorized by user earlier and requesting same information as before
-				log.debug("[" + sessionContext.user.getName() + "] already authorized response");
-				Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
+				log.debug("[" + openidSession.getUser().getName() + "] already authorized response");
+				Message message = OpenIdHelper.buildAuthResponse(serverManager, openidSession.getUser(), parameterList, openidSession.getUserSelectedId(), openidSession.getUserSelectedClaimedId() , relyingPartyContext.getAttributeReleased().keySet());
 				OpenIdHelper.sendIndirectResponse(resp, message);
+				return;
 			}
-			else if(sessionContext.parameterList.equals(parameterList) == false)
+			else if(relyingPartyContext!=null &&   relyingPartyContext.isAuthorizedByUser() && relyingPartyContext.getParameterList().equals(parameterList) == false)
 			{
 				// authorized by user earlier but requesting different set of information 
 				
-				if(OpenIdHelper.isSubset(serverManager , parameterList, sessionContext.parameterList))
+				if(OpenIdHelper.isSubset(serverManager , parameterList, relyingPartyContext.getParameterList()))
 				{
 					// request is seeking only a subset of attributes from last time - hence allow
-					Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
+					Message message = OpenIdHelper.buildAuthResponse(serverManager, openidSession.getUser(), parameterList, openidSession.getUserSelectedId(), openidSession.getUserSelectedClaimedId() ,relyingPartyContext.getAttributeReleased().keySet());
 					OpenIdHelper.sendIndirectResponse(resp, message);
+					return;
 				}
 				else
 				{
 					// request is seeking more attributes than user authorized last time. User approval necessary
-					log.debug("[" + sessionContext.user.getName() + "] need to re-authorize attribute release");
-					sessionContext.parameterList = parameterList;
+					log.debug("[" + openidSession.getUser().getName() + "] need to re-authorize attribute release");
+					relyingPartyContext.setParameterList(parameterList);
 					Map<Attribute,Boolean> attributeRequested = OpenIdHelper.getAttributeRequested(serverManager, parameterList);
-					showSeekApprovalPage( resp , sessionContext.user , sessionContext.parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
+					showSeekApprovalPage( resp , openidSession.getUser() , parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
 				}
 			}
 			else
 			{
 				// never authorized by user before.
+		
 				Map<Attribute,Boolean> attributeRequested = OpenIdHelper.getAttributeRequested(serverManager, parameterList);
 				if(attributeRequested.size() > 0)
 				{
 					// seek approval
-					log.debug("[" + sessionContext.user.getName() + "] need to authorize attribute release");
-					sessionContext.parameterList = parameterList;
-					showSeekApprovalPage( resp , sessionContext.user , sessionContext.parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
+					log.debug("[" + openidSession.getUser().getName() + "] need to authorize attribute release");
+					relyingPartyContext.setParameterList(parameterList);
+					showSeekApprovalPage( resp , openidSession.getUser() , parameterList.getParameterValue("openid.return_to") ,  attributeRequested);
 				}
 				else
 				{
 					// no approval necessary as no attributes were requested
-					log.debug("[" + sessionContext.user.getName() + "] : no attributes to release");
-					sessionContext.parameterList = parameterList;
-					sessionContext.setAuthorizedByUser(true);
-					Message message = OpenIdHelper.buildAuthResponse(serverManager, sessionContext.getUser(), parameterList, sessionContext.getUserSelectedId(), sessionContext.getUserSelectedClaimedId() , sessionContext.getAttributeReleased().keySet());
+					log.debug("[" + openidSession.getUser().getName() + "] : no attributes to release");
+					relyingPartyContext.setParameterList(parameterList);
+					relyingPartyContext.setAttributeReleased(attributeRequested);
+					relyingPartyContext.setAuthorizedByUser(true);
+					Message message = OpenIdHelper.buildAuthResponse(serverManager, openidSession.getUser(), parameterList, openidSession.getUserSelectedId(), openidSession.getUserSelectedClaimedId() , relyingPartyContext.getAttributeReleased().keySet());
 					OpenIdHelper.sendIndirectResponse(resp, message);
+					return;
 				}
 				
 			}
@@ -539,13 +570,13 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		else
 		{
 			// user not logged In . Show login page
-			sessionContext.parameterList = parameterList;
-			showLoginPage(req, resp, null , identityService);
+			relyingPartyContext.setParameterList(parameterList);
+			showLoginPage(req, resp, null , identityService , relyingPartyContext.getRelyingPartyDomain());
 		}
 		
 	}
 	
-	protected void showSeekApprovalPage(HttpServletResponse resp , User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws Exception
+	private void showSeekApprovalPage(HttpServletResponse resp , User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws Exception
 	{
 
 		URL relyingParty = new URL(relyingPartyUrl);
@@ -567,62 +598,6 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	{
 		@Expose private boolean decision;
 		@Expose private List<String> optionalAttributes;
-	}
-	
- 	public static class OpenIDSessionContext {
-		private boolean isLoggedIn;
-		private boolean isAuthorizedByUser;
-		private ParameterList parameterList;
-		private String userSelectedId;
-		private String userSelectedClaimedId;
-		private User user;
-		private Map<Attribute,Boolean> attributeReleased;
-		
-		
-		public Map<Attribute, Boolean> getAttributeReleased() {
-			return attributeReleased;
-		}
-		public void setAttributeReleased(Map<Attribute, Boolean> attributeReleased) {
-			this.attributeReleased = attributeReleased;
-		}
-		public User getUser() {
-			return user;
-		}
-		public void setUser(User user) {
-			this.user = user;
-		}
-		public boolean isLoggedIn() {
-			return isLoggedIn;
-		}
-		public void setLoggedIn(boolean isLoggedIn) {
-			this.isLoggedIn = isLoggedIn;
-		}
-		public boolean isAuthorizedByUser() {
-			return isAuthorizedByUser;
-		}
-		public void setAuthorizedByUser(boolean isAuthorizedByUser) {
-			this.isAuthorizedByUser = isAuthorizedByUser;
-		}
-		public ParameterList getParameterList() {
-			return parameterList;
-		}
-		public void setParameterList(ParameterList parameterList) {
-			this.parameterList = parameterList;
-		}
-		public String getUserSelectedId() {
-			return userSelectedId;
-		}
-		public void setUserSelectedId(String userSelectedId) {
-			this.userSelectedId = userSelectedId;
-		}
-		public String getUserSelectedClaimedId() {
-			return userSelectedClaimedId;
-		}
-		public void setUserSelectedClaimedId(String userSelectedClaimedId) {
-			this.userSelectedClaimedId = userSelectedClaimedId;
-		}
-		
-		
 	}
 	
 }

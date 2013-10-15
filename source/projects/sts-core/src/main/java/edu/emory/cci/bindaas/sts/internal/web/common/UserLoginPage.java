@@ -16,16 +16,33 @@ public class UserLoginPage {
 	private VelocityEngineWrapper velocityEngineWrapper;
 	private Template template;
 	
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+	}
+
+	public VelocityEngineWrapper getVelocityEngineWrapper() {
+		return velocityEngineWrapper;
+	}
+
+	public void setVelocityEngineWrapper(VelocityEngineWrapper velocityEngineWrapper) {
+		this.velocityEngineWrapper = velocityEngineWrapper;
+	}
+
 	public void init() throws Exception
 	{
 		template = velocityEngineWrapper.getVelocityTemplateByName(templateName);
 	}
 	
-	public void showLoginPage(HttpServletResponse response , String actionUrl , String sectionTitle , String pageTitle , String errorMessage , Map<String,String> hiddenFields ) throws Exception
+	public void showLoginPage(HttpServletResponse response , String loginUrl , String cancelUrl , String sectionTitle , String pageTitle , String errorMessage , Map<String,String> hiddenFields ) throws Exception
 	{
 		
 		VelocityContext context = velocityEngineWrapper.createVelocityContext();
-		context.put("actionUrl" , actionUrl);
+		context.put("loginUrl" , loginUrl);
+		context.put("cancelUrl" , cancelUrl);
 		context.put("sectionTitle", sectionTitle);
 		context.put("pageTitle", pageTitle);
 		
@@ -36,22 +53,22 @@ public class UserLoginPage {
 		response.flushBuffer();
 	}
 	
-	public void showLoginPage(HttpServletResponse response , String actionUrl , String sectionTitle , String pageTitle , String errorMessage ) throws Exception
+	public void showLoginPage(HttpServletResponse response , String loginUrl , String cancelUrl  , String sectionTitle , String pageTitle , String errorMessage ) throws Exception
 	{
 		Map<String,String> hiddenFields = new HashMap<String, String>();
-		showLoginPage(response, actionUrl, sectionTitle , pageTitle , errorMessage , hiddenFields);
+		showLoginPage(response, loginUrl , cancelUrl, sectionTitle , pageTitle , errorMessage , hiddenFields);
 	}
 	
-	public void showLoginPage(HttpServletResponse response , String actionUrl , String sectionTitle , String pageTitle ) throws Exception
+	public void showLoginPage(HttpServletResponse response , String loginUrl , String cancelUrl  , String sectionTitle , String pageTitle ) throws Exception
 	{
 		Map<String,String> hiddenFields = new HashMap<String, String>();
-		showLoginPage(response, actionUrl, sectionTitle , pageTitle , null , hiddenFields);
+		showLoginPage(response, loginUrl , cancelUrl, sectionTitle , pageTitle , null , hiddenFields);
 	}
 	
-	public void showLoginPage(HttpServletResponse response , String actionUrl , String title ) throws Exception
+	public void showLoginPage(HttpServletResponse response , String loginUrl , String cancelUrl , String title ) throws Exception
 	{
 		Map<String,String> hiddenFields = new HashMap<String, String>();
-		showLoginPage(response, actionUrl, title , title , null , hiddenFields);
+		showLoginPage(response, loginUrl , cancelUrl, title , title , null , hiddenFields);
 	}
 	
 	

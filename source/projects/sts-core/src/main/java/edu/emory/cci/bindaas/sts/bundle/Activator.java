@@ -14,6 +14,8 @@ public class Activator implements BundleActivator {
 		context = arg0;
 		log.debug("--- Started ----");
 		
+		
+		
 	}
 
 	

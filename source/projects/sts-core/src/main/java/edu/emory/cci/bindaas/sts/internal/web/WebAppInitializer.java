@@ -2,13 +2,15 @@ package edu.emory.cci.bindaas.sts.internal.web;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 
 public  class WebAppInitializer {
 	private String moduleName;
 	private List<GeneralServlet> listOfServlets;
-	
+	private Log log = LogFactory.getLog(getClass());
 	public List<GeneralServlet> getListOfServlets() {
 		return listOfServlets;
 	}
@@ -29,6 +31,7 @@ public  class WebAppInitializer {
 	{
 		for(GeneralServlet generalServlet : this.listOfServlets)
 		{
+			log.debug("Module [" + getModuleName() + "] registering Servlet [" + generalServlet.getClass().getSimpleName() + "] at [" + generalServlet.getServletUrl() + "]" );
 			httpService.registerServlet(generalServlet.getServletUrl(),generalServlet, null, httpContext);
 		}
 		

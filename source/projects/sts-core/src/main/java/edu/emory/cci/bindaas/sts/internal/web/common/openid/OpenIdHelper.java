@@ -56,38 +56,14 @@ public class OpenIdHelper {
 	   */
 
 	  public static void logRequestParameters(ParameterList request) {
-	    log.trace("logRequestParameters() BEGIN...");
-	    if (log.isDebugEnabled()) {
-	      log.debug("Dumping request parameters:");
 	      List<Parameter> paramList =  request.getParameters();
 	      for (Parameter parameter : paramList) {
 	        log.debug(parameter.getKey() + ":" + parameter.getValue());
 	      }
-	    }
-	    log.trace("logRequestParameters() END...");
+	    
 	  }
-
-	 
-//	  
-//	  /**
-//	   * TODO: implement this using Velocity Template
-//	   * @return
-//	   */
-//	  public static String createXrdsResponse(Template wrapper , String opEndpointUrl) {
-//	    log.trace("createXrdsResponse() BEGIN...");
-////	    XrdsDocumentBuilder documentBuilder = new XrdsDocumentBuilder();
-////	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/server", OpenIdProviderService.getOpEndpointUrl(), "10");
-////	    documentBuilder.addServiceElement("http://specs.openid.net/auth/2.0/signon", OpenIdProviderService.getOpEndpointUrl(), "20");
-////	    documentBuilder.addServiceElement(AxMessage.OPENID_NS_AX, OpenIdProviderService.getOpEndpointUrl(), "30");
-////	    documentBuilder.addServiceElement(SRegMessage.OPENID_NS_SREG, OpenIdProviderService.getOpEndpointUrl(), "40");
-//	    
-//	    
-//	    log.trace("createXrdsResponse() BEGIN...");
-//	    return null;
-//	  }
-
 	  
-
+	  
 	  public static void sendDirectResponse(HttpServletResponse response, Message message) throws IOException {
 	    response.setContentType("text/plain");
 	    OutputStream os = response.getOutputStream();
@@ -96,7 +72,9 @@ public class OpenIdHelper {
 	  }
 	  
 	  public static void sendIndirectResponse(HttpServletResponse response, Message message) throws IOException {
-		    response.sendRedirect(message.getDestinationUrl(true));
+		  String redirectUrl = message.getDestinationUrl(true);
+		  log.debug("Sending Indirect Response [" + redirectUrl + "]");
+		  response.sendRedirect(redirectUrl);
 		  }
 	  
 	  
@@ -163,6 +141,7 @@ public class OpenIdHelper {
 	        		  if(attr!=null && userAuthorizedAttributes.contains(attr))
 	        		  {
 	        			  fetchResponse.addAttribute(key, axSchema, attr.extractValue(user));
+
 	        		  }
 	        	  }
 	          }
@@ -219,12 +198,21 @@ public class OpenIdHelper {
 		          
 		          for(Object optAttr : optional)
 		          {
-		        	  optionalAttributes.add(Attribute.lookupBySreg(optAttr.toString()));
+		        	  Attribute attr = Attribute.lookupBySreg(optAttr.toString());
+		        	  if(attr!=null)
+		        		  optionalAttributes.add(attr);
+		        	  else
+		        		  log.warn("Sreg Attribute not supported [" + optAttr.toString() + "]");
+		        	  
 		          }
 		          
 		          for(Object mandAttr : mandatory)
 		          {
-		        	  mandatoryAttributes.add(Attribute.lookupBySreg(mandAttr.toString()));
+		        	  Attribute attr = Attribute.lookupBySreg(mandAttr.toString());
+		        	  if(attr!=null)
+		        		  mandatoryAttributes.add(attr);
+		        	  else
+		        		  log.warn("Sreg Attribute not supported [" + mandAttr.toString() + "]");
 		          }
 		          
 		        } else {
@@ -243,12 +231,20 @@ public class OpenIdHelper {
 		          
 		          for(Object optAttr : optional.values())
 		          {
-		        	  optionalAttributes.add(Attribute.lookupBySreg(optAttr.toString()));
+		        	  Attribute attr = Attribute.lookupByAxSchema(optAttr.toString());
+		        	  if(attr!=null)
+		        		  optionalAttributes.add(attr);
+		        	  else
+		        		  log.warn("Ax Attribute not supported [" + optAttr.toString() + "]");
 		          }
 		          
 		          for(Object mandAttr : mandatory.values())
 		          {
-		        	  mandatoryAttributes.add(Attribute.lookupBySreg(mandAttr.toString()));
+		        	  Attribute attr = Attribute.lookupByAxSchema(mandAttr.toString());
+		        	  if(attr!=null)
+		        		  mandatoryAttributes.add(attr);
+		        	  else
+		        		  log.warn("Ax Attribute not supported [" + mandAttr.toString() + "]");
 		          }
 		        } else {
 		          log.error("Cannot continue processing Attribute Exchange (AX) request. The object returned from the AuthRequest (of type " + extensionRequestObject.getClass().getName() + ") claims to be correct, but is not of type " + AxMessage.class.getName() + " as expected.");
