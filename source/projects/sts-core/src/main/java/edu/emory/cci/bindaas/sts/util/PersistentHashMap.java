@@ -3,30 +3,23 @@ package edu.emory.cci.bindaas.sts.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonWriter;
 
 
-public class PersistentHashMap <K,V>  extends HashMap<K, V> {
+public class PersistentHashMap <V> implements IPartialMap<V> , Serializable {
+
 private static final long serialVersionUID = -2804233468591293561L;
-
 private File file;
-private Type type = new TypeToken<HashMap<K,V>>(){}.getType();
-private Class<K> keyType ;
 private Class<V> valueType ;
 
-public PersistentHashMap(File file , Class<K> clazzKey , Class<V> classValue) throws Exception
+public PersistentHashMap(File file , Class<V> classValue) throws Exception
 {
 	this.file = file;
-	this.keyType = clazzKey;
 	this.valueType = classValue;
 	load();
 }
@@ -41,63 +34,81 @@ private void load() throws Exception
 		
 		for(Entry<String, JsonElement> entry : entrySet)
 		{
-			String keyString = entry.getKey();
+			String key = entry.getKey();
 			String valueString = entry.getValue().toString();
-			K key = GSONUtil.getGSONInstance().fromJson(keyString, keyType);
 			V value = GSONUtil.getGSONInstance().fromJson(valueString, valueType);
-			super.put(key , value);
+			put(key , value);
 		}
+	}
+	else
+	{
+		FileWriter fw = new FileWriter(file);
+		fw.append("{}");
+		fw.close();
 	}
 	
 }
 
-@Override
+
 public synchronized void clear() {
-	super.clear();
 	file.delete();
 }
 
-@Override
-public  synchronized  V get(Object key) {
 
-	return super.get(key);
+public  synchronized  V get(String key) {
+
+	try {
+		JsonObject json = readFromFile();
+		
+		if(json.has(key))
+		 {
+			return GSONUtil.getGSONInstance().fromJson(json.get(key), valueType);
+		 }
+		else
+			return null;
+	} catch (Exception e) {
+		throw new RuntimeException(e);
+	}
 }
 
-@Override
-public  synchronized V put(K key, V value) {
+
+private synchronized JsonObject readFromFile() throws Exception
+{
+	FileReader reader = null;
+	try{
+		 reader = new FileReader(file);
+		 JsonObject json = GSONUtil.getJsonParser().parse(reader).getAsJsonObject();
+		 return json;
+	}
+	catch(Exception e)
+	{
+		throw e;
+	}
+	finally{
+		if(reader!=null)
+		{
+			reader.close();
+		}
+	}
+}
+
+public  synchronized V put(String key, V value) {
+	
 	try {
+		 V oldVal = null;
+		
+		 JsonObject json = readFromFile();
 		 
-		 V oldVal = super.put(key, value);
-		 try{
-			 	FileWriter fw = new FileWriter(file);
-			 	JsonObject jsonObject = new JsonObject();
-			 	for(K k : keySet())
-			 	{
-			 		String keyString = null;
-			 		if(! (k instanceof String))
-			 		{
-			 			keyString = GSONUtil.getGSONInstance().toJson(k , keyType);
-			 		}
-			 		else
-			 		{
-			 			keyString = k.toString();
-			 		}
-			 		
-					JsonElement valueJson = GSONUtil.getGSONInstance().toJsonTree( value , valueType);
-					jsonObject.add(keyString , valueJson);
-			 	}
-			 	fw.write(jsonObject.toString());
-//			 	GSONUtil.getGSONInstance().toJson(this , type ,  new JsonWriter(fw));
-			 	fw.close();
-			 	
-		 }
-		 catch(Exception ee)
+		 if(json.has(key))
 		 {
-			 if(oldVal!=null)
-				 super.put(key, oldVal);
-			 else
-				 super.remove(key);
+			 oldVal = GSONUtil.getGSONInstance().fromJson(json.get(key), valueType);
 		 }
+		 
+		 FileWriter fw = new FileWriter(file);
+		 json.add(key, GSONUtil.getGSONInstance().toJsonTree(value));
+		 fw.write(json.toString());
+		 fw.close();
+		 
 		 return oldVal;
 	} catch (Exception e) {
 		throw new RuntimeException(e);
@@ -105,28 +116,24 @@ public  synchronized V put(K key, V value) {
 	
 }
 
-@Override
-public synchronized  void putAll(Map<? extends K, ? extends V> m) {
-	for(K key : m.keySet())
-	{
-		put(key , m.get(key));
-	}
-	
-}
 
-@Override
-public synchronized  V remove(Object key) {
+
+public synchronized  V remove(String key) {
 	try {
 		 
-		 V oldVal = super.remove(key);
-		 try{
-			 	GSONUtil.getGSONInstance().toJson(this , type ,  new JsonWriter(new FileWriter(file)));
-		 }
-		 catch(Exception ee)
+		 V oldVal = null;
+		 JsonObject json = readFromFile();
+		 
+		 if(json.has(key))
 		 {
-			 if(oldVal!=null)
-				 super.put((K) key, oldVal);
+			 oldVal = GSONUtil.getGSONInstance().fromJson(json.get(key), valueType);
 		 }
+		 
+		 FileWriter fw = new FileWriter(file);
+		 json.remove(key);
+		 fw.write(json.toString());
+		 fw.close();
+		 
 		 return oldVal;
 	} catch (Exception e) {
 		throw new RuntimeException(e);

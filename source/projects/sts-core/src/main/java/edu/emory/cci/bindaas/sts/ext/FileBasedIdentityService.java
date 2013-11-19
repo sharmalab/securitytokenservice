@@ -59,7 +59,7 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 			{
 				User usr = new  User();
 				usr.setName(user);
-				usr.setGroups(new ArrayList<Group>());
+				usr.setGroups(new HashSet<String>());
 				this.users.put(user, usr);
 			}
 			
@@ -67,15 +67,15 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 			{
 				Group group = new Group();
 				group.setName(grp);
-				group.setUsers(new ArrayList<User>());
+				group.setUsers(new HashSet<String>());
 				
 				for(String usr : configuration.getGroupStore().get(grp))
 				{
 					User user = this.users.get(usr);
 					if(user!=null)
 					{
-						group.getUsers().add(user);
-						user.getGroups().add(group);
+						group.getUsers().add(usr);
+						user.getGroups().add(grp);
 					}
 				}
 				
@@ -111,9 +111,9 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 			User usr  = users.get(credential.getUsername());
 			if(usr.getGroups()!=null && usr.getGroups().size() > 0)
 			{
-				for(Group grp : usr.getGroups())
+				for(String grp : usr.getGroups())
 				{
-					values.add(grp.getName());
+					values.add(grp);
 				}
 			}
 			

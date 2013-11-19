@@ -1,15 +1,18 @@
 package edu.emory.cci.bindaas.sts.api.model;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.annotations.Expose;
+
+import edu.emory.cci.bindaas.sts.util.GSONUtil;
 
 public class Group {
 
 	@Expose private String name;
 	@Expose private Map<String,String> properties;
-	@Expose private List<User> users;
+	@Expose private Set<String> users;
+	
 	public String getName() {
 		return name;
 	}
@@ -22,11 +25,30 @@ public class Group {
 	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
-	public List<User> getUsers() {
+	public Set<String> getUsers() {
 		return users;
 	}
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<String> users) {
 		this.users = users;
+	}
+	
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
+	
+	public boolean equals(Object group)
+	{
+		if(group instanceof Group)
+		{
+			return Group.class.cast(group).name.equals(this.name);
+		}
+		
+		return false;
+	}
+	
+	public String toString(){
+		return GSONUtil.getGSONInstance().toJson(this);
 	}
 	
 }

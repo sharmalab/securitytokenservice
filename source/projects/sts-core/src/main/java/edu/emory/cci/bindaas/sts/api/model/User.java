@@ -1,11 +1,12 @@
 package edu.emory.cci.bindaas.sts.api.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.annotations.Expose;
 
+import edu.emory.cci.bindaas.sts.util.GSONUtil;
 public class User {
 	@Expose private String name; // username
 	@Expose private Map<String,String> attributes; // other attributes
@@ -16,7 +17,7 @@ public class User {
 	@Expose private String nickname;
 	@Expose private String postcode;
 	@Expose private Gender gender;
-	@Expose private List<Group> groups;	
+	@Expose private Set<String> groups;	
 	
 	public Map<String,String> getSregAttributes()
 	{
@@ -77,6 +78,7 @@ public class User {
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
+
 	public static enum Gender { M ,F  , UNKNOWN }
 	
 
@@ -87,10 +89,30 @@ public class User {
 		this.name = name;
 	}
 	
-	public List<Group> getGroups() {
+	public Set<String> getGroups() {
 		return groups;
 	}
-	public void setGroups(List<Group> groups) {
+	public void setGroups(Set<String> groups) {
 		this.groups = groups;
+	}
+	
+	public String toString()
+	{
+		return GSONUtil.getGSONInstance().toJson(this);
+	}
+	
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
+	
+	public boolean equals(Object group)
+	{
+		if(group instanceof User)
+		{
+			return User.class.cast(group).name.equals(this.name);
+		}
+		
+		return false;
 	}
 }

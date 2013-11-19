@@ -25,7 +25,7 @@
 
 <bean id="applicationStarter" class="edu.emory.cci.bindaas.sts.bundle.ApplicationStarter" init-method="startup">
 	<property name="securityTokenService" ref="securityTokenServiceCore"></property>
-	<property name="host" value="localhost"></property>
+	<property name="host" value="0.0.0.0"></property>
 	<property name="port" value="1111"></property>
 </bean>
 
@@ -33,6 +33,8 @@
 	<property name="managerService" ref="managerService"></property>
 </bean>
 
+<bean id="jdbcDriverRegistry" class="edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry" init-method="init">
+</bean>
 
 <!-- Velocity -->
 <bean id="velocityWrapper" class="edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper" init-method="init">
@@ -91,6 +93,7 @@
 <osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
 <osgi:service interface="edu.emory.cci.bindaas.sts.service.IManagerService" ref="managerService"></osgi:service>
 <osgi:service interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
+<osgi:service interface="edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry" ref="jdbcDriverRegistry"></osgi:service>
 </beans>
 
 

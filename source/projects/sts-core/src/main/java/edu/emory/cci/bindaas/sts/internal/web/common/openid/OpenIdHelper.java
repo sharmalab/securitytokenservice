@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.velocity.Template;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.AuthSuccess;
 import org.openid4java.message.Message;
@@ -29,7 +28,6 @@ import org.openid4java.message.sreg.SRegResponse;
 import org.openid4java.server.ServerManager;
 
 import edu.emory.cci.bindaas.sts.api.model.User;
-import edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper;
 
 public class OpenIdHelper {
 	  

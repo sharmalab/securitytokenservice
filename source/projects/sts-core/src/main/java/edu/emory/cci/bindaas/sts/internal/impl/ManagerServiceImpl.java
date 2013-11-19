@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +12,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import com.google.gson.JsonObject;
 
+import edu.emory.cci.bindaas.sts.api.IDGenerator;
 import edu.emory.cci.bindaas.sts.api.IIdentityProvider;
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
@@ -21,12 +21,24 @@ import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
 import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
 import edu.emory.cci.bindaas.sts.service.IManagerService;
+import edu.emory.cci.bindaas.sts.util.IPartialMap;
 import edu.emory.cci.bindaas.sts.util.PersistentHashMap;
 
 public class ManagerServiceImpl  implements IManagerService{
 
 	private String serviceRegistrationFile;
+	private IDGenerator idGenerator;
 	
+	
+	
+	public IDGenerator getIdGenerator() {
+		return idGenerator;
+	}
+
+	public void setIdGenerator(IDGenerator idGenerator) {
+		this.idGenerator = idGenerator;
+	}
+
 	public String getServiceRegistrationFile() {
 		return serviceRegistrationFile;
 	}
@@ -35,7 +47,7 @@ public class ManagerServiceImpl  implements IManagerService{
 		this.serviceRegistrationFile = serviceRegistrationFile;
 	}
 
-	private PersistentHashMap<String, IdentityServiceRegistration> serviceRegistrationMap;
+	private IPartialMap<IdentityServiceRegistration> serviceRegistrationMap;
 	private ServiceTracker<IIdentityProvider, IIdentityProvider> identityProviderTracker;
 	private Map<IdentityServiceRegistration, IIdentityService> serviceMap;
 	private IConfigurationManagerService configurationManager;
@@ -51,7 +63,8 @@ public class ManagerServiceImpl  implements IManagerService{
 	
 	public void init() throws Exception
 	{
-		serviceRegistrationMap = new PersistentHashMap<String, IdentityServiceRegistration>(new File(serviceRegistrationFile) , String.class , IdentityServiceRegistration.class);
+		idGenerator = new URLFriendlyIDGenerator();
+		serviceRegistrationMap = new PersistentHashMap<IdentityServiceRegistration>(new File(serviceRegistrationFile) ,  IdentityServiceRegistration.class);
 		serviceMap = new HashMap<IdentityServiceRegistration, IIdentityService>();
 		identityProviderTracker = new ServiceTracker<IIdentityProvider, IIdentityProvider>(Activator.getContext(), IIdentityProvider.class, null);
 		identityProviderTracker.open();
@@ -87,6 +100,12 @@ public class ManagerServiceImpl  implements IManagerService{
 	public IdentityServiceRegistration registerService(
 			String identityProviderId, String name , String description,
 			JsonObject configuration) throws IdentityProviderException {
+		
+		String id = idGenerator.generateID(name);
+		IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
+		if(serviceRegistration!=null)
+			throw new IdentityProviderException(id , "IdentityProvider Already Exists");
+		
 		// lookup correct IdentityProvider
 		IIdentityProvider identityProvider = lookupIdentityProvider(identityProviderId);
 		if(identityProvider!=null)
@@ -96,7 +115,7 @@ public class ManagerServiceImpl  implements IManagerService{
 			serviceReg.setConfiguration(configuration);
 			serviceReg.setCreated(new Date());
 			serviceReg.setDescription(description);
-			serviceReg.setId(UUID.randomUUID().toString());
+			serviceReg.setId(id);
 			serviceReg.setName(name);
 			serviceReg.setIdentityProviderId(identityProviderId);
 			IIdentityService identityService = identityProvider.createService(serviceReg);
