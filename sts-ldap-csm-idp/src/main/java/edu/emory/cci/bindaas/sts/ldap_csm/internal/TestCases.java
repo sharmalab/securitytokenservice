@@ -75,7 +75,7 @@ private ServiceTracker<IManagerService, IManagerService> serviceTracker;
 		
 		JsonObject configuration = GSONUtil.getGSONInstance().toJsonTree(fileConfig).getAsJsonObject();
 		try {
-			IdentityServiceRegistration serviceReg = managerService.registerService(identityProviderId, name, description, configuration);
+			IdentityServiceRegistration serviceReg = managerService.registerService(identityProviderId, name, description, configuration , true);
 			System.out.println(serviceReg.getConfiguration());
 			System.out.println(serviceReg.getId());
 			IIdentityService identityService = managerService.getService(serviceReg.getId());

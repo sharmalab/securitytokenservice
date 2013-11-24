@@ -2,8 +2,10 @@ package edu.emory.cci.bindaas.sts.internal.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +18,7 @@ import edu.emory.cci.bindaas.sts.api.IDGenerator;
 import edu.emory.cci.bindaas.sts.api.IIdentityProvider;
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
+import edu.emory.cci.bindaas.sts.api.exception.IdentityServiceAlreadyExistException;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityServiceNotFoundException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.bundle.Activator;
@@ -28,7 +31,6 @@ public class ManagerServiceImpl  implements IManagerService{
 
 	private String serviceRegistrationFile;
 	private IDGenerator idGenerator;
-	
 	
 	
 	public IDGenerator getIdGenerator() {
@@ -97,14 +99,14 @@ public class ManagerServiceImpl  implements IManagerService{
 		return identityProvider;
 	}
 	
-	public IdentityServiceRegistration registerService(
+	public synchronized IdentityServiceRegistration registerService(
 			String identityProviderId, String name , String description,
-			JsonObject configuration) throws IdentityProviderException {
+			JsonObject configuration , boolean overwrite) throws IdentityProviderException, IdentityServiceAlreadyExistException {
 		
 		String id = idGenerator.generateID(name);
 		IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
-		if(serviceRegistration!=null)
-			throw new IdentityProviderException(id , "IdentityProvider Already Exists");
+		if(!overwrite && serviceRegistration!=null)
+			throw new IdentityServiceAlreadyExistException(id);
 		
 		// lookup correct IdentityProvider
 		IIdentityProvider identityProvider = lookupIdentityProvider(identityProviderId);
@@ -123,6 +125,7 @@ public class ManagerServiceImpl  implements IManagerService{
 			serviceRegistrationMap.put(identityService.getRegistrationInfo().getId(), identityService.getRegistrationInfo());
 			addService(identityService);
 			// return registration object
+			log.info("Identity Service [" + serviceReg.getId() + "] Created");
 			return identityService.getRegistrationInfo();
 			
 		}
@@ -133,7 +136,7 @@ public class ManagerServiceImpl  implements IManagerService{
 
 	}
 
-	public IdentityServiceRegistration removeService(String id)
+	public synchronized IdentityServiceRegistration removeService(String id)
 			throws IdentityProviderException {
 		// lookup ServiceReg corresponding to id
 		IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
@@ -201,6 +204,45 @@ public class ManagerServiceImpl  implements IManagerService{
 					throw new IdentityServiceNotFoundException(id);
 				}
 		}
+
+	public List<IdentityServiceRegistration> getAllService() {
+
+		return serviceRegistrationMap.values();
+	}
+
+	public List<IIdentityProvider> getIdentityProviders() {
+		IIdentityProvider[] availableIdentityProviders = new IIdentityProvider[identityProviderTracker.size()];
+		availableIdentityProviders = identityProviderTracker.getServices(availableIdentityProviders);
+		return Arrays.asList(availableIdentityProviders);
+	}
+
+	public IdentityServiceRegistration registerService(
+			IIdentityProvider identityProvider, String name,
+			String description, JsonObject configuration, boolean overwrite)
+			throws IdentityProviderException,
+			IdentityServiceAlreadyExistException {
+		String id = idGenerator.generateID(name);
+		IdentityServiceRegistration serviceRegistration = serviceRegistrationMap.get(id);
+		if(!overwrite && serviceRegistration!=null)
+			throw new IdentityServiceAlreadyExistException(id);
+		
+		// delegate creation of the service
+		IdentityServiceRegistration serviceReg = new IdentityServiceRegistration();
+		serviceReg.setConfiguration(configuration);
+		serviceReg.setCreated(new Date());
+		serviceReg.setDescription(description);
+		serviceReg.setId(id);
+		serviceReg.setName(name);
+		serviceReg.setIdentityProviderId(identityProvider.getClass().getName());
+		IIdentityService identityService = identityProvider.createService(serviceReg);
+		// persist registration object
+		serviceRegistrationMap.put(identityService.getRegistrationInfo().getId(), identityService.getRegistrationInfo());
+		addService(identityService);
+		// return registration object
+		log.info("Identity Service [" + serviceReg.getId() + "] Created");
+		return identityService.getRegistrationInfo();
+		
+	}
 
 	
 

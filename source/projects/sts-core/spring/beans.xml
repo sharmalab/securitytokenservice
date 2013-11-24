@@ -25,8 +25,48 @@
 
 <bean id="applicationStarter" class="edu.emory.cci.bindaas.sts.bundle.ApplicationStarter" init-method="startup">
 	<property name="securityTokenService" ref="securityTokenServiceCore"></property>
-	<property name="host" value="0.0.0.0"></property>
-	<property name="port" value="1111"></property>
+	<property name="configurationManager" ref="configurationService"></property>
+	<property name="defaultSystemConfiguration" ref="systemConfig"></property>
+	<property name="managementService" ref="managerService"></property>
+	<property name="adminFileBasedIdentityConfiguration" ref="adminFileBasedIdentityConfiguration"></property>
+	<property name="fileBasedIdentityProvider" ref="fileBasesIdentityProvider"></property>
+
+</bean>
+
+<bean id="systemConfig" class="edu.emory.cci.bindaas.sts.internal.conf.SystemConfiguration">
+		<property name="stsHost" value="0.0.0.0"></property>
+		<property name="stsPort" value="1111"></property>
+		<property name="stsProtocol" value="http"></property>
+		<property name="adminIdentityService" value="admin-identity-service"></property>
+</bean>
+
+<bean id="adminFileBasedIdentityConfiguration" class="edu.emory.cci.bindaas.sts.ext.FileBasedIdentityServiceConfiguration">
+		<property name="tokenLifetime" value="3600"></property>
+		<property name="userStore">
+			<map>
+				<entry key="admin" value="password"></entry>
+			</map>
+		</property>
+		<property name="groupStore">
+			<map>
+				<entry key="admin">
+					<list>
+						<value>admin</value>
+					</list>
+				</entry>
+			</map>
+		</property>
+		
+</bean>
+
+<bean id="loginFilter" class="edu.emory.cci.bindaas.sts.internal.web.login.LoginFilter">
+	<property name="appStarter" ref="applicationStarter"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
+	<property name="bodyCenterTemplateName" value="admin_dashboard.login_body_center_section.vt.html"></property>
+	<property name="managementService" ref="managerService"></property>
+	<property name="servletUrl" value="/rakshak/administration/.*"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="adminHomePage" ref="viewServiceServletUrl"></property>
 </bean>
 
 <bean id="securityTokenServiceCore" class="edu.emory.cci.bindaas.sts.rest.impl.SecurityTokenServiceCoreImpl" init-method="init">
@@ -51,23 +91,27 @@
 	<property name="listOfAppInitializers">
 		<list>
 			<ref bean="openIDWebApp"/>
+			<ref bean="adminWebApps"/>
 		</list>
 	</property>
+	<property name="loginFilter" ref="loginFilter"></property>
 </bean>
 
 <bean id="errorPage" class="edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage" init-method="init">
-	<property name="templateName" value="errorPage.vt.html"></property>
+	<property name="templateName" value="openid.error_page_body_center_section.vt.html"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 </bean>
 
-<bean id="loginPage" class="edu.emory.cci.bindaas.sts.internal.web.common.UserLoginPage" init-method="init">
-	<property name="templateName" value="loginPage.vt.html"></property>
+<bean id="loginPage" class="edu.emory.cci.bindaas.sts.internal.web.common.openid.UserLoginPage" init-method="init">
+	<property name="templateName" value="openid.login_page_body_center_section.vt.html"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 </bean>
 
 
 <!-- OpenID -->
-<bean id="openIDWebApp" class="edu.emory.cci.bindaas.sts.internal.web.WebAppInitializer" >
+<bean id="openIDWebApp" class="edu.emory.cci.bindaas.sts.internal.web.WebModule" >
 	<property name="moduleName" value="OpenID Web Application"></property>
 	<property name="listOfServlets">
 		<list>
@@ -80,11 +124,114 @@
 	<property name="errorPage" ref="errorPage"></property>
 	<property name="loginPage" ref="loginPage"></property>
 	<property name="managerService" ref="managerService"></property>
-	<property name="seekUserApprovalTemplateName" value="seekUserApproval.vt.html"></property>
-	<property name="servletUrl" value="/client/openid"></property>
+	<property name="seekUserApprovalTemplateName" value="openid.seek_user_approval_body_section.vt.html"></property>
+	<property name="servletUrl" value="/rakshak/client/openid"></property>
 	<property name="sessionMaxInactiveInterval" value="36000"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 	<property name="xrdsTemplateName" value="xrds.vt"></property>	
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
+	
+</bean>
+
+
+<!-- Main Admin Web Apps -->
+<bean id="adminWebApps" class="edu.emory.cci.bindaas.sts.internal.web.WebModule" >
+	<property name="moduleName" value="Rakshak Admin Dashboard Application"></property>
+	<property name="listOfServlets">
+		<list>
+			<ref bean="createEditIdentityServlet"/>
+			<ref bean="gettingStartedServlet"/>
+			<ref bean="viewServiceServlet"/>		
+		</list>
+	</property>
+</bean>
+
+<bean id="viewServiceBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.ViewServiceBodyCenterSection" init-method="init">
+	<property name="baseTemplateName" value="admin_dashboard.view_service_body_center_section.vt.html"></property>
+	<property name="createEditServletUrl" ref="createEditIdentityServletUrl"></property>
+	<property name="gettingStartedUrl" value="/rakshak/administration/getting_started"></property>
+	<property name="managementService" ref="managerService"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="appStarter" ref="applicationStarter"></property>
+</bean>
+
+<bean id="serviceMenuLeftMarginSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.ServiceMenuLeftMarginSection" init-method="init">
+	<property name="baseTemplateName" value="admin_dashboard.service_menu_left_margin_section.vt.html"></property>
+	<property name="createNewServiceUrl" ref="createEditIdentityServletUrl"></property>
+	<property name="viewServiceUrl" ref="viewServiceServletUrl"></property>
+	<property name="managementService" ref="managerService"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+<bean id="postLoginUserSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.PostLoginUserSection" init-method="init">
+	<property name="baseTemplateName" value="admin_dashboard.post_login_user_section.vt.html"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+<bean id="gettingStartedBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GettingStartedBodyCenterSection" init-method="init">
+	<property name="baseTemplateName" value="admin_dashboard.getting_started_body_center_section.vt.html"></property>
+	<property name="createNewServiceUrl" ref="createEditIdentityServletUrl"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+<bean id="createNewServiceBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.CreateNewServiceBodyCenterSection" init-method="init">
+	<property name="baseTemplateName" value="admin_dashboard.create_new_service_body_center_section.vt.html"></property>
+	<property name="createEditServletUrl" ref="createEditIdentityServletUrl"></property>
+	<property name="viewServiceServletUrl" ref="viewServiceServletUrl"></property>
+	<property name="managementService" ref="managerService"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+<!-- Common URLs -->
+<bean id="createEditIdentityServletUrl" class="java.lang.String">
+	<constructor-arg index="0">
+		<value>/rakshak/administration/create_edit_identity_service.action</value>
+	</constructor-arg>
+</bean>
+<bean id="viewServiceServletUrl" class="java.lang.String">
+	<constructor-arg index="0">
+		<value>/rakshak/administration/home</value>
+	</constructor-arg>
+</bean>
+
+<!-- servlets -->
+<bean id="createEditIdentityServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.CreateEditIdentityServiceServlet">
+	<property name="servletUrl" ref="createEditIdentityServletUrl"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
+	<property name="bodyCenterSection" ref="createNewServiceBodyCenterSection"></property>
+	<property name="bodyLeftMarginSection" ref="serviceMenuLeftMarginSection"></property>
+	<property name="bodyRightMarginSection" ref="postLoginUserSection"></property>
+	<property name="pageSubtitleSection" ref="createNewServiceBodyCenterSection"></property>
+	<property name="pageTitleSection" ref="createNewServiceBodyCenterSection"></property>
+	<property name="userSection" ref="postLoginUserSection"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+	<property name="managerService" ref="managerService"></property>
+	<property name="viewServiceUrl" ref="viewServiceServletUrl"></property>
+</bean>
+
+<bean id="gettingStartedServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GeneralBaseTemplateServlet">
+	<property name="servletUrl" value="/rakshak/administration/getting_started"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
+	<property name="bodyCenterSection" ref="gettingStartedBodyCenterSection"></property>
+	<property name="bodyLeftMarginSection" ref="serviceMenuLeftMarginSection"></property>
+	<property name="bodyRightMarginSection" ref="postLoginUserSection"></property>
+	<property name="pageSubtitleSection" ref="gettingStartedBodyCenterSection"></property>
+	<property name="pageTitleSection" ref="gettingStartedBodyCenterSection"></property>
+	<property name="userSection" ref="postLoginUserSection"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
+</bean>
+
+
+<bean id="viewServiceServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GeneralBaseTemplateServlet">
+	<property name="servletUrl" ref="viewServiceServletUrl"></property>
+	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
+	<property name="bodyCenterSection" ref="viewServiceBodyCenterSection"></property>
+	<property name="bodyLeftMarginSection" ref="serviceMenuLeftMarginSection"></property>
+	<property name="bodyRightMarginSection" ref="postLoginUserSection"></property>
+	<property name="pageSubtitleSection" ref="viewServiceBodyCenterSection"></property>
+	<property name="pageTitleSection" ref="viewServiceBodyCenterSection"></property>
+	<property name="userSection" ref="postLoginUserSection"></property>
+	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 	
 </bean>
 

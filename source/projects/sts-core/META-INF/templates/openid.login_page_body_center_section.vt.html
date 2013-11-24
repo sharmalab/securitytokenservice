@@ -1,0 +1,49 @@
+<div class="col-lg-6">
+				<form method="post">
+					<fieldset>
+						<legend>
+							<h2> $sectionTitle - Login</h2>
+						</legend>
+						<div class="form-group">
+							<label for="username">Username</label>
+							<input type="text" class="form-control" name="username" placeholder="username">
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input type="password" class="form-control" name="password" placeholder="password">
+						</div>
+						
+						#if ($hiddenFields)
+							#foreach ($field in $hiddenFields.keySet())
+							<input type="hidden" name="$field" value="$hiddenFields.get($field)">
+							#end
+						#end
+						<button class="btn btn-primary" onClick="doLogin();">
+							Login
+						</button>
+						<button  class="btn btn-danger" onclick="cancelLogin();">
+							Cancel
+						</button>
+						<br />
+						#if($errorMessage)
+						<strong class="text-danger">$errorMessage</strong>
+						#end
+					</fieldset>
+				</form>
+				<script>
+			function cancelLogin()
+			{
+				$("form").attr('action', "$cancelUrl");
+				$("form").submit();
+			}
+			
+			function doLogin()
+			{
+				$("form").attr('action' , "$loginUrl");
+				$("form").submit();	
+			}
+		</script>
+			
+</div>
+<div class="col-lg-6">
+</div>

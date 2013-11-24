@@ -2,6 +2,7 @@ package edu.emory.cci.bindaas.sts.api.exception;
 
 public class IdentityProviderException extends Exception {
 
+	private static final long serialVersionUID = 3446207780119397935L;
 	private String id;
 	
 	public IdentityProviderException(String id) {

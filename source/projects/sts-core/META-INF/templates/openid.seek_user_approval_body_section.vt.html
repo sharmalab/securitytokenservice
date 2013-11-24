@@ -1,0 +1,74 @@
+<form id="submissionForm" method="post" action="?action=seekApproval">
+					<fieldset>
+						<legend>
+							<h2>  <b class="text-info">$relyingParty</b> would like to : </h2>
+						</legend>
+						
+						#foreach ($attribute in $attributeRequested.keySet())
+							#if($attributeRequested.get($attribute) == false)
+							<div class="well well-sm">
+							<div class="checkbox">
+    							<label>
+						      		<input name="attributes" type="checkbox" value="$attribute.toString()"> <strong >View your $attribute.getCommonName()</strong>
+						    	</label>
+						    	<div class="text-info">$attribute.extractValue($user)</div>
+						  	</div>
+							</div>
+							
+							
+							#else
+							<div class="well well-sm">
+    							<label>
+						      		<strong>View your $attribute.getCommonName()</strong>
+						    	</label>
+						    	<div class="text-info">$attribute.extractValue($user)</div>
+						  	</div>
+								
+							#end
+						#end
+						
+
+							<input type="hidden" name="response">
+							<input type="hidden" name="relyingParty" value="$relyingParty">
+							<input type="hidden" name="action" value="seekApproval">
+						
+						<button  class="btn btn-primary" onclick="handleSubmission('accept');">
+							Accept
+						</button>
+						<button  class="btn btn-danger" onclick="handleSubmission('cancel');">
+							Cancel
+						</button>
+					</fieldset>
+				</form>
+				<script>
+			function handleSubmission(action)
+			{
+				if(action == 'accept')
+				{
+					var payload = {};
+					payload.decision = true;
+					payload.optionalAttributes =[];
+					$("input[name='attributes']:checked").each(
+						function() {
+							payload.optionalAttributes.push($(this).attr('value'));
+						}
+					);
+					
+					$("input[name='response']").attr('value', JSON.stringify(payload));
+					console.log(JSON.stringify(payload));
+					$("#submissionForm").submit();
+				}
+				else if(action =='cancel')
+				{
+					var payload = {};
+					payload.decision = false;
+					$("input[name='response']").attr('value', JSON.stringify(payload));
+					console.log(JSON.stringify(payload));
+					$("#submissionForm").submit();
+				}
+				else
+				{
+					console.log("Unknown action");
+				}
+			}
+		</script>

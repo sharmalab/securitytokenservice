@@ -36,4 +36,9 @@ public class FileBasedIdentityProvider implements IIdentityProvider {
 		return service;
 	}
 
+	public String getDescription() {
+		
+		return "File Based Identity Provider";
+	}
+
 }

@@ -72,4 +72,9 @@ public class LdapCsmIdentityProvider implements IIdentityProvider {
 		return service;
 	}
 
+	public String getDescription() {
+		
+		return "LDAP/CSM Identity Provider";
+	}
+
 }

@@ -6,5 +6,5 @@ import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 public interface IIdentityProvider {	
 	
 	public IIdentityService createService(IdentityServiceRegistration serviceReg) throws IdentityProviderException;
-	
+	public String getDescription();
 }

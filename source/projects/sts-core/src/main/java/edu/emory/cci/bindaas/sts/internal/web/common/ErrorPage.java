@@ -1,5 +1,8 @@
 package edu.emory.cci.bindaas.sts.internal.web.common;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +18,17 @@ public class ErrorPage {
 	private VelocityEngineWrapper velocityEngineWrapper;
 	private Template template;
 	private Log log = LogFactory.getLog(getClass());
+	
+	private String baseTemplateName;
+	private Template baseTemplate;
+
+	public String getBaseTemplateName() {
+		return baseTemplateName;
+	}
+
+	public void setBaseTemplateName(String baseTemplateName) {
+		this.baseTemplateName = baseTemplateName;
+	}
 
 	public String getTemplateName() {
 		return templateName;
@@ -35,18 +49,36 @@ public class ErrorPage {
 	public void init() throws Exception {
 		template = velocityEngineWrapper
 				.getVelocityTemplateByName(templateName);
+		baseTemplate = velocityEngineWrapper.getVelocityTemplateByName(baseTemplateName);
 	}
 
+	private String getBodyCenterContent( HTTPError error,
+			String detailedMessage, String suggestedAction) throws IOException 
+	{
+		StringWriter sw = new StringWriter();
+		VelocityContext context = velocityEngineWrapper
+				.createVelocityContext();
+		context.put("error", error);
+		context.put("detailedMessage", detailedMessage);
+		context.put("suggestedAction", suggestedAction);
+		template.merge(context, sw );
+		sw.close();
+		return sw.toString();
+	}
 	public void showErrorPage(HttpServletResponse response, HTTPError error,
 			String detailedMessage, String suggestedAction) {
 		try {
 			response.setStatus(error.getStatusCode());
-			VelocityContext context = velocityEngineWrapper
-					.createVelocityContext();
-			context.put("error", error);
-			context.put("detailedMessage", detailedMessage);
-			context.put("suggestedAction", suggestedAction);
-			template.merge(context, response.getWriter());
+			String bodyCenterContent = getBodyCenterContent(error, detailedMessage, suggestedAction);
+			
+			VelocityContext context = velocityEngineWrapper.createVelocityContext();
+			context.put("userInformaation", "");
+			context.put("pageTitle",  "");
+			context.put("pageSubTitle", "");
+			context.put("bodyLeftMargin", "");
+			context.put("bodyCenter",  bodyCenterContent);
+			context.put("bodyRightMargin", "");
+			baseTemplate.merge(context, response.getWriter());
 			response.flushBuffer();
 		} catch (Exception e) {
 			log.fatal("Cannot generate error response", e);

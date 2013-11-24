@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.felix.http.api.ExtHttpService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpContext;
@@ -12,20 +13,38 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import edu.emory.cci.bindaas.sts.bundle.Activator;
-
+import edu.emory.cci.bindaas.sts.internal.web.login.LoginFilter;
+/**
+ * WebApplicationLauncher is the base class that registers GeneralServlets from all WebModules.
+ * @author nadir
+ *
+ */
 public class WebApplicationLauncher {
 
 	private final static String WEBCONTENT_DIRECTORY=  "/webcontent";
-	private List<WebAppInitializer> listOfAppInitializers;
+	private List<WebModule> listOfAppInitializers;
+	private LoginFilter loginFilter;
 	private Log log = LogFactory.getLog(getClass());
 	
-	public List<WebAppInitializer> getListOfAppInitializers() {
+	
+	
+	public LoginFilter getLoginFilter() {
+		return loginFilter;
+	}
+
+
+	public void setLoginFilter(LoginFilter loginFilter) {
+		this.loginFilter = loginFilter;
+	}
+
+
+	public List<WebModule> getListOfAppInitializers() {
 		return listOfAppInitializers;
 	}
 
 
 	public void setListOfAppInitializers(
-			List<WebAppInitializer> listOfAppInitializers) {
+			List<WebModule> listOfAppInitializers) {
 		this.listOfAppInitializers = listOfAppInitializers;
 	}
 
@@ -64,15 +83,15 @@ public class WebApplicationLauncher {
 	{
 		try{
 			HttpContext defaultContext = httpService.createDefaultHttpContext();
-			for(WebAppInitializer appInitializer : this.listOfAppInitializers)
+			for(WebModule appInitializer : this.listOfAppInitializers)
 			{
 				
 				appInitializer.init(httpService, defaultContext);
 			}
 			
 			
-			httpService.registerResources(WEBCONTENT_DIRECTORY, WEBCONTENT_DIRECTORY, defaultContext);
-			
+			httpService.registerResources( WEBCONTENT_DIRECTORY, WEBCONTENT_DIRECTORY, defaultContext);
+			ExtHttpService.class.cast(httpService).registerFilter(loginFilter	, loginFilter.getServletUrl(), null, 0, defaultContext);
 		}catch(Exception e)
 		{
 			log.fatal("ApplicationStarter did not initialize",e);

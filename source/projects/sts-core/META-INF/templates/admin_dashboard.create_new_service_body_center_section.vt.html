@@ -1,0 +1,104 @@
+<form role="form">
+	<div class="form-group">
+		<label>Name</label> <input class="form-control"
+			placeholder="Service Name" name="name">
+	</div>
+	<div class="form-group">
+		<label>Description</label> <input class="form-control"
+			placeholder="Description" name="description">
+	</div>
+	<div class="form-group">
+		<label>Identity Provider</label> <select class="form-control"
+			name="identityProvider">
+			<option value="null">-- Select --</option>
+			#foreach ($identityProvider in $identityProviders)
+				<option value="$identityProvider.getClass().getName()">$identityProvider.getDescription()</option>
+			#end
+		</select>
+	</div>
+
+	<div class="form-group">
+		<textarea class="form-control" rows="10" name="configuration"></textarea>
+
+		<br />
+		<button type="button" class="btn btn-primary" name="submit">Save</button>
+		<button type="button" class="btn btn-primary" name="cancel">Cancel</button>
+	</div>
+</form>
+
+<script>
+					function validateInput()
+					{
+						try{
+						var name = $("input[name='name']").attr('value');
+						var description = 	$("input[name='description']").attr('value');
+						var configuration = $("textarea[name='configuration']").val();
+						var identityProvider = $("select[name='identityProvider'] option:selected").attr('value');
+						
+						configuration = JSON.parse(configuration);
+						
+						if(configuration && name && identityProvider && identityProvider!= "null")
+						{
+							var response = {};
+							response.name = name;
+							response.description = description;
+							response.identityProviderId = identityProvider;
+							response.configuration = configuration;
+							
+							response = JSON.stringify(response);
+							return response;
+						}
+						else
+						{
+							return false;
+						}
+						}
+						catch(error)
+						{							
+							return false;
+						}
+					
+					}
+					
+					function submit()
+					{
+						var url = "";
+						var response = validateInput();
+						console.log(response);
+						$.post(url , { "response" : response } , function(data){
+							window.location = data;
+						}).fail(
+							function(error){
+								console.log(error);
+								alert(error);
+							}
+						);
+					}
+
+function validateAndEnableDisableSubmitButton()
+{
+	if(validateInput())
+	{
+		$("button[name='submit']").removeAttr("disabled");
+	}
+	else
+	{
+		$("button[name='submit']").attr("disabled","disabled");
+	}
+}
+
+function init()
+{
+	$("input[name='name']").keyup(function(){ validateAndEnableDisableSubmitButton(); });
+	$("input[name='description']").keyup(function(){ validateAndEnableDisableSubmitButton(); });
+	$("textarea").keyup(function(){ validateAndEnableDisableSubmitButton(); });
+	$("select").change(function(){ validateAndEnableDisableSubmitButton(); });
+	
+	$("button[name='cancel']").click(function(){ window.location = "$viewServiceServletUrl" ;});
+	$("button[name='submit']").click(function(){ submit() ;});
+	$("button[name='submit']").attr("disabled","disabled");
+		
+}
+
+init();					
+			</script>

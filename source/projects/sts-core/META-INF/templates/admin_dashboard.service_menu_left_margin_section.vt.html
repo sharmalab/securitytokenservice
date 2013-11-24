@@ -1,0 +1,20 @@
+#if ($showMenu)
+<div class="col-lg-4">
+	<!-- leave blank -->
+</div>
+<div class="col-lg-10">
+
+
+	<a href="$createNewServiceUrl" class="btn btn-default">
+		Create New Service <span class="glyphicon glyphicon-forward"></span>
+	</a>
+	<br /> <br />
+	<ul class="nav nav-pills nav-stacked">
+		#foreach ($service in $listOfIdentityServices)
+			<li><a href="$viewServiceUrl?serviceId=$service.getId()">$service.getId()</a></li>
+		#end
+	</ul>
+</div>
+#end
+
+

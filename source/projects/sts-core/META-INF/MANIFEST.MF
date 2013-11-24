@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1384885443231
+Bnd-LastModified: 1385188756853
 Build-Jdk: 1.6.0_65
 Built-By: nadir
 Bundle-Activator: edu.emory.cci.bindaas.sts.bundle.Activator
@@ -59,39 +59,42 @@ Embedded-Artifacts: target/dependency/xml-apis-1.4.01.jar;g="xml-apis";a
 Export-Package: edu.emory.cci.bindaas.sts.service;uses:="edu.emory.cci.b
  indaas.sts.api,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaa
  s.sts.api.exception,com.google.gson";version="0.0.1.SNAPSHOT",edu.emory
- .cci.bindaas.sts.util;uses:="com.google.gson,com.google.gson.annotation
- s,org.apache.commons.logging,org.osgi.util.tracker,org.osgi.framework,c
- om.google.gson.reflect,com.google.gson.stream";version="0.0.1.SNAPSHOT"
- ,edu.emory.cci.bindaas.sts.api;uses:="org.apache.commons.logging,edu.em
- ory.cci.bindaas.sts.opensaml2.model,edu.emory.cci.bindaas.sts.api.model
- ,edu.emory.cci.bindaas.sts.opensaml2.util,edu.emory.cci.bindaas.sts.api
- .exception,edu.emory.cci.bindaas.sts.service,com.google.gson,edu.emory.
- cci.bindaas.sts.util";version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.st
- s.api.exception;uses:="edu.emory.cci.bindaas.sts.api.model";version="0.
- 0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.api.model;uses:="com.google.gso
- n.annotations,com.google.gson,edu.emory.cci.bindaas.sts.util";version="
- 0.0.1.SNAPSHOT"
-Ignore-Package: javax.crypto.interfaces,java.util.jar,javax.swing.tree,o
- rg.apache.log4j,java.net,com.werken.xpath,org.apache.log.format,org.apa
- che.tools.ant.taskdefs,junit.framework,javax.faces.component,javax.swin
- g,java.io,org.jdom,java.util.zip,javax.security.auth.x500,javax.servlet
- .jsp.tagext,net.sf.ehcache,java.awt.event,java.lang,javax.net.ssl,java.
- util.concurrent,javax.naming,org.apache.commons.fileupload,org.apache.x
- erces.parsers,java.util.concurrent.locks,org.ietf.jgss,javax.crypto,jav
- ax.servlet.jsp,java.lang.reflect,edu.emory.cci.bindaas.sts.rest.impl,co
- m.google.inject.internal.asm.util,javax.swing.table,java.security.spec,
- java.beans,org.springframework.dao,javax.inject,java.sql,java.util.logg
- ing,org.apache.commons.logging.impl,org.apache.commons.fileupload.disk,
- javax.annotation,java.util,java.nio.channels,org.springframework.jdbc.c
- ore.support,javax.faces.context,java.lang.annotation,org.apache.log.out
- put.io,org.relaxng.datatype,org.apache.xerces.util,java.nio.charset,com
- .sun.msv.datatype.xsd,java.math,org.gjt.xpp,org.springframework.jdbc.co
- re,java.lang.ref,org.apache.xerces.xni,java.util.regex,javax.swing.even
- t,javax.portlet,org.apache.xerces.impl,sun.misc,java.util.concurrent.at
- omic,java.awt,org.apache.html.dom,org.jdom.output,com.sun.msv.datatype,
- org.jdom.input,java.nio,java.text,org.apache.xerces.xni.parser,org.apac
- he.tools.ant,edu.emory.cci.bindaas.sts.rest.api,java.security,javax.cry
- pto.spec,org.apache.log,java.security.cert,javax.sql,junit.awtui
+ .cci.bindaas.sts.util;uses:="org.apache.commons.logging,org.osgi.framew
+ ork,edu.emory.cci.bindaas.sts.service,com.google.gson,com.google.gson.a
+ nnotations,org.osgi.util.tracker";version="0.0.1.SNAPSHOT",edu.emory.cc
+ i.bindaas.sts.api;uses:="edu.emory.cci.bindaas.sts.opensaml2.model,org.
+ apache.commons.logging,edu.emory.cci.bindaas.sts.api.model,edu.emory.cc
+ i.bindaas.sts.opensaml2.util,edu.emory.cci.bindaas.sts.api.exception,ed
+ u.emory.cci.bindaas.sts.service,com.google.gson,edu.emory.cci.bindaas.s
+ ts.util";version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.api.excepti
+ on;uses:="edu.emory.cci.bindaas.sts.api.model";version="0.0.1.SNAPSHOT"
+ ,edu.emory.cci.bindaas.sts.api.model;uses:="com.google.gson.annotations
+ ,com.google.gson,edu.emory.cci.bindaas.sts.util";version="0.0.1.SNAPSHO
+ T"
+Ignore-Package: javax.crypto.interfaces,java.util.jar,edu.emory.cci.bind
+ aas.sts.api,javax.swing.tree,org.apache.log4j,edu.emory.cci.bindaas.sts
+ .api.model,java.net,com.werken.xpath,org.apache.log.format,org.apache.t
+ ools.ant.taskdefs,junit.framework,javax.faces.component,javax.swing,jav
+ a.io,org.jdom,java.util.zip,javax.security.auth.x500,javax.servlet.jsp.
+ tagext,net.sf.ehcache,java.awt.event,java.lang,javax.net.ssl,java.util.
+ concurrent,javax.naming,org.apache.commons.fileupload,org.apache.xerces
+ .parsers,edu.emory.cci.bindaas.sts.internal.conf,java.util.concurrent.l
+ ocks,org.ietf.jgss,javax.crypto,javax.servlet.jsp,java.lang.reflect,edu
+ .emory.cci.bindaas.sts.rest.impl,com.google.inject.internal.asm.util,ja
+ vax.swing.table,edu.emory.cci.bindaas.sts.ext,java.security.spec,java.b
+ eans,org.springframework.dao,javax.inject,java.sql,java.util.logging,or
+ g.apache.commons.logging.impl,org.apache.commons.fileupload.disk,javax.
+ annotation,java.util,java.nio.channels,org.springframework.jdbc.core.su
+ pport,javax.faces.context,java.lang.annotation,org.apache.log.output.io
+ ,org.relaxng.datatype,org.apache.xerces.util,java.nio.charset,com.sun.m
+ sv.datatype.xsd,java.math,org.gjt.xpp,org.springframework.jdbc.core,jav
+ a.lang.ref,org.apache.xerces.xni,java.util.regex,javax.swing.event,java
+ x.portlet,edu.emory.cci.bindaas.sts.service,org.apache.xerces.impl,sun.
+ misc,java.util.concurrent.atomic,java.awt,org.apache.html.dom,org.jdom.
+ output,com.sun.msv.datatype,org.jdom.input,java.nio,java.text,org.apach
+ e.xerces.xni.parser,org.apache.tools.ant,edu.emory.cci.bindaas.sts.rest
+ .api,java.security,javax.crypto.spec,org.apache.log,java.security.cert,
+ javax.sql,edu.emory.cci.bindaas.sts.api.exception,junit.awtui
 Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
  tions;version="[2.1,3)",com.google.gson.reflect;version="[2.1,3)",com.g
  oogle.gson.stream;version="[2.1,3)",edu.emory.cci.bindaas.sts.cxf.core;
@@ -101,8 +104,9 @@ Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
  OT",javax.servlet;version="0.0.0",javax.servlet.http;version="0.0.0",ja
  vax.ws.rs;version="[0.0,1)",javax.ws.rs.core;version="[0.0,1)",javax.ws
  .rs.ext;version="[0.0,1)",org.apache.commons.logging;version="[1.1,2)",
- org.junit;version="[0.0,1)",org.osgi.framework;version="[1.7,2)",org.os
- gi.service.http;version="1.2.0",org.osgi.util.tracker;version="[1.5,2)"
+ org.apache.felix.http.api;version="[2.0,3)",org.junit;version="[0.0,1)"
+ ,org.osgi.framework;version="[1.7,2)",org.osgi.service.http;version="1.
+ 2.0",org.osgi.util.tracker;version="[1.5,2)"
 Spring-Context: spring/*.xml
 Test-Suite: edu.emory.cci.bindaas.sts.internal.test.ManagerService
 Tool: Bnd-1.50.0

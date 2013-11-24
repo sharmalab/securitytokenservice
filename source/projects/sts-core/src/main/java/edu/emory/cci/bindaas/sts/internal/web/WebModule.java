@@ -6,8 +6,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
-
-public  class WebAppInitializer {
+/**
+ * WebModule is an aggregation of GeneralServlets belonging to one module.
+ *  
+ * @author nadir
+ *
+ */
+public  class WebModule {
 	private String moduleName;
 	private List<GeneralServlet> listOfServlets;
 	private Log log = LogFactory.getLog(getClass());

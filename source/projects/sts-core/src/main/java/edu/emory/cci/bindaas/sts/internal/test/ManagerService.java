@@ -14,7 +14,6 @@ import org.osgi.util.tracker.ServiceTracker;
 import com.google.gson.JsonObject;
 
 import edu.emory.cci.bindaas.sts.api.IIdentityService;
-import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.model.Credential;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.api.model.SecureToken;
@@ -62,8 +61,8 @@ public class ManagerService {
 		
 		JsonObject configuration = GSONUtil.getGSONInstance().toJsonTree(fileConfig).getAsJsonObject();
 		try {
-			managerService.registerService(identityProviderId, name, description, configuration);
-		} catch (IdentityProviderException e) {
+			managerService.registerService(identityProviderId, name, description, configuration , true);
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -90,7 +89,7 @@ public class ManagerService {
 		
 		JsonObject configuration = GSONUtil.getGSONInstance().toJsonTree(fileConfig).getAsJsonObject();
 		try {
-			IdentityServiceRegistration serviceReg = managerService.registerService(identityProviderId, name, description, configuration);
+			IdentityServiceRegistration serviceReg = managerService.registerService(identityProviderId, name, description, configuration , true);
 			IIdentityService identityService = managerService.getService(serviceReg.getId());
 			String token = identityService.issueToken(new Credential("nadir", "password"), "http://someapplication.org").getContent();
 			System.out.println(token);

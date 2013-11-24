@@ -1,6 +1,7 @@
 package edu.emory.cci.bindaas.sts.internal.web.common.openid;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
@@ -36,15 +37,14 @@ import edu.emory.cci.bindaas.sts.api.model.User;
 import edu.emory.cci.bindaas.sts.internal.web.GeneralServlet;
 import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage;
 import edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage.HTTPError;
-import edu.emory.cci.bindaas.sts.internal.web.common.UserLoginPage;
 import edu.emory.cci.bindaas.sts.internal.web.common.openid.OpenIDSession.RelyingPartyContext;
 import edu.emory.cci.bindaas.sts.service.IManagerService;
 import edu.emory.cci.bindaas.sts.util.GSONUtil;
 import edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper;
 
 /**
- * registered at : /client/openid/*
- * pattern : /client/openid/{service}
+ * registered at : /rakshak/client/openid/*
+ * pattern : /rakshak/client/openid/{service}
  * @author nadir
  *
  */
@@ -62,6 +62,17 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 	private String seekUserApprovalTemplateName;
 	private VelocityEngineWrapper velocityEngineWrapper;
 	private ErrorPage errorPage;
+	private String baseTemplateName;
+	private Template baseTemplate;
+
+	public String getBaseTemplateName() {
+		return baseTemplateName;
+	}
+
+	public void setBaseTemplateName(String baseTemplateName) {
+		this.baseTemplateName = baseTemplateName;
+	}
+
 	
 	public String getSeekUserApprovalTemplateName() {
 		return seekUserApprovalTemplateName;
@@ -132,8 +143,7 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		serverManagerCache = new HashMap<String, ServerManager>();
 		xrdsTemplate = velocityEngineWrapper.getVelocityTemplateByName(xrdsTemplateName);
 		seekUserApprovalTemplate = velocityEngineWrapper.getVelocityTemplateByName(seekUserApprovalTemplateName);
-		
-		log.debug(getClass().getName() + " initialized");
+		baseTemplate = velocityEngineWrapper.getVelocityTemplateByName(baseTemplateName);
 	}
 
 	@Override
@@ -576,18 +586,33 @@ public class OpenIDEndpointServlet extends GeneralServlet{
 		
 	}
 	
-	private void showSeekApprovalPage(HttpServletResponse resp , User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws Exception
+	private void showSeekApprovalPage(HttpServletResponse response , User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws Exception
 	{
-
+		String bodyCenterSection = getBodyCenterSection(user, relyingPartyUrl, attributeRequested);
+		VelocityContext context = velocityEngineWrapper.createVelocityContext();
+		context.put("userInformaation", "");
+		context.put("pageTitle",  "");
+		context.put("pageSubTitle", "");
+		context.put("bodyLeftMargin", "");
+		context.put("bodyCenter",  bodyCenterSection);
+		context.put("bodyRightMargin", "");
+		baseTemplate.merge(context, response.getWriter());
+		response.flushBuffer();
+		
+	}
+	
+	private String getBodyCenterSection(User user , String relyingPartyUrl , Map<Attribute,Boolean> attributeRequested) throws IOException
+	{
+		StringWriter sw = new StringWriter();
 		URL relyingParty = new URL(relyingPartyUrl);
 		VelocityContext context = velocityEngineWrapper.createVelocityContext();
 		context.put("user", user);
 		context.put("attributeRequested", attributeRequested);
 		context.put("relyingParty", relyingParty.getHost());
 		
-		seekUserApprovalTemplate.merge(context, resp.getWriter());
-		resp.flushBuffer();
-		
+		seekUserApprovalTemplate.merge(context, sw );
+		sw.close();
+		return sw.toString();
 	}
 
 	public static enum Mode {associate, checkid_setup, checkid_immediate, check_authentication}
