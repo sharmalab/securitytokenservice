@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<properties>
+		<bundle.symbolicName>sts-dorian-gridgrouper-facade-idp</bundle.symbolicName>
+		<bundle.namespace>edu.emory.cci.bindaas.sts</bundle.namespace>
+	</properties>
+	<parent>
+		<groupId>bindaas-sts</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>${bundle.symbolicName}</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+	<description>caGRID Identity Provider - Dorian And GridGrouper using STS 1.0 facade</description>
+	<dependencies>
+		<dependency>
+			<groupId>bindaas-sts</groupId>
+			<artifactId>bindaas-sts-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+
+
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>.</directory>
+				<includes>
+					<include>plugin.xml</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<!-- the following instructions build a simple set of public/private 
+					classes into an OSGi bundle -->
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<instructions>
+						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+
+						<Export-Package></Export-Package>
+						<Bundle-Activator>edu.emory.cci.bindaas.sts.cagrid.bundle.Activator</Bundle-Activator>
+						<!-- <Import-Package>edu.emory.cci.bindaas.sts.service,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaas.sts.api.exception,edu.emory.cci.bindaas.sts.api,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,org.osgi.service.http;version="1.2.0",!* 
+							</Import-Package> -->
+						<Import-Package>edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.service,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaas.sts.api.exception,edu.emory.cci.bindaas.sts.api,edu.emory.cci.bindaas.sts.util,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,org.osgi.service.http;version="1.2.0",!*</Import-Package>
+						<Private-Package>edu.emory.cci.bindaas.sts.cagrid.bundle</Private-Package>
+
+						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
+						<Embed-Directory>target/dependency</Embed-Directory>
+						<Embed-StripGroup>true</Embed-StripGroup>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Include-Resource>spring=spring</Include-Resource>
+						<Spring-Context>spring/*.xml</Spring-Context>
+
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
