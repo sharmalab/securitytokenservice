@@ -1,0 +1,14 @@
+{
+	"ldapConfiguration" : {
+		
+		"ldapHost" : "localhost" ,
+		"ldapPort" : 10389 ,
+		"baseDN" : "dc=sharmalab,dc=bmi,dc=emory,dc=edu",
+		"dbTemplate" : "cn=%s,ou=people,dc=sharmalab,dc=bmi,dc=emory,dc=edu",
+		"bindUsername" : "nadirsaghar",
+		"bindPassword" : "temp"
+	
+	} ,
+	"issuerName" : "Emory University" ,
+	"tokenLifetime" : 3600
+}
