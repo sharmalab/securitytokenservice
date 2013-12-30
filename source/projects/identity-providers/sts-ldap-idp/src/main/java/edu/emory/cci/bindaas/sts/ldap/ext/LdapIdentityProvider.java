@@ -5,25 +5,13 @@ import edu.emory.cci.bindaas.sts.api.IIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.model.IdentityServiceRegistration;
 import edu.emory.cci.bindaas.sts.service.IConfigurationManagerService;
-import edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry;
 
 public class LdapIdentityProvider implements IIdentityProvider {
 
 	private IConfigurationManagerService configurationManager;
 	private String keyPairFileName ;
-	private JDBCDriverRegistry jdbcDriverRegistry;
 	
 	
-	
-	
-	public JDBCDriverRegistry getJdbcDriverRegistry() {
-		return jdbcDriverRegistry;
-	}
-
-	public void setJdbcDriverRegistry(JDBCDriverRegistry jdbcDriverRegistry) {
-		this.jdbcDriverRegistry = jdbcDriverRegistry;
-	}
-
 	public String getKeyPairFileName() {
 		return keyPairFileName;
 	}
@@ -51,7 +39,7 @@ public class LdapIdentityProvider implements IIdentityProvider {
 
 	public String getDescription() {
 		
-		return "LDAP/CSM Identity Provider";
+		return "LDAP Identity Provider";
 	}
 
 }

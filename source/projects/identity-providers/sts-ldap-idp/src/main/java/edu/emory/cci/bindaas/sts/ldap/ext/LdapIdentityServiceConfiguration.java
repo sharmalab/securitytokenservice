@@ -39,6 +39,11 @@ public class LdapIdentityServiceConfiguration {
 	public void validate() throws Exception /** validate all fields **/
 	{
 		if(issuerName == null) throw new Exception ("Field [issuerName] is missing");
+		
+		if(ldapConfiguration == null) throw new Exception("LDAPConfiguration not set");
+		else {
+			ldapConfiguration.validate();
+		}
 		LDAPConfiguration.testLDAPConnection(ldapConfiguration);
 	}
 	

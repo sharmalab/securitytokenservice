@@ -505,6 +505,9 @@ public class LDAPConfiguration {
 						}
 					}
 					
+					// add default member
+					groupEntry.add(new DefaultAttribute("uniqueMember", String.format("%s,%s" , searchGroupsLdapQuery , baseDN)));
+					
 					connection.add(groupEntry);
 					
 					group = new Group();
@@ -670,6 +673,14 @@ public class LDAPConfiguration {
 		}
 		
 		return null;
+	}
+
+
+
+	public void validate() throws Exception {
+		if(baseDN == null || dnTemplate == null || ldapHost == null || ldapPort == null || bindUsername == null || bindPassword == null )
+			throw new Exception("Field [baseDN|dnTemplate|ldapHost|ldapPort|bindUsername|bindPassword] not set");
+		
 	}
 	
 }
