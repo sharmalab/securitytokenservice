@@ -12,6 +12,7 @@ public class Group {
 	@Expose private String name;
 	@Expose private Map<String,String> properties;
 	@Expose private Set<String> users;
+	@Expose private String description;
 	
 	public String getName() {
 		return name;
@@ -49,6 +50,13 @@ public class Group {
 	
 	public String toString(){
 		return GSONUtil.getGSONInstance().toJson(this);
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

@@ -22,13 +22,22 @@ public interface IIdentityService {
 	public User lookupUserByName(String username) throws IdentityProviderException;
 	public Collection<User> getUsers() throws IdentityProviderException;
 	public Collection<Group> getGroups() throws IdentityProviderException;
-	public User addUser(String username,Collection<String> groups) throws IdentityProviderException;
-	public Group addGroup(String group,Collection<String> users) throws IdentityProviderException;
-	public Group removeGroup(String group) throws IdentityProviderException;
-	public User removeUser(String user) throws IdentityProviderException;
-	public Group updateGroup(Group group) throws IdentityProviderException;
-	public User updateUser(User user) throws IdentityProviderException;
 	
+	
+	// Add existing user to specified group(s)
+	public User assignUserToGroups(String username,Collection<String> groups) throws IdentityProviderException;
+	
+	// Add specified users to this group. Create group if not already exist
+	public Group createOrModifyGroup(String group, String description , Collection<String> users , boolean createGroupIfNotExist) throws IdentityProviderException;
+	
+	// Remove group
+	public Group removeGroup(String group) throws IdentityProviderException;
+	
+	
+	// Remove users from group
+	public Group removeUsersFromGroup(String group , Collection<String> users) throws IdentityProviderException;
+	
+	public void removeUsersFromAllGroups(Collection<String> users) throws IdentityProviderException;
 	
 	public IdentityServiceRegistration getRegistrationInfo() ;
 	public boolean isOperationSupported(ServiceOperation serviceOperation);
