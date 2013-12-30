@@ -8,13 +8,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-
-
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +34,7 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import edu.emory.cci.bindaas.sts.api.AbstractIdentityService;
+import edu.emory.cci.bindaas.sts.api.AbstractSimpleIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.AuthenticationException;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.exception.MethodNotImplementedException;
@@ -51,21 +45,8 @@ import edu.emory.cci.bindaas.sts.api.model.SecureToken;
 import edu.emory.cci.bindaas.sts.api.model.ServiceOperation;
 import edu.emory.cci.bindaas.sts.api.model.User;
 
-public class DorianGrouperIdentityService  extends AbstractIdentityService{
+public class DorianGrouperIdentityService  extends AbstractSimpleIdentityService{
 
-private static Set<ServiceOperation> allowedOperations;
-	
-	static {
-		allowedOperations = new HashSet<ServiceOperation>();
-		allowedOperations.add(ServiceOperation.issueToken);
-		allowedOperations.add(ServiceOperation.validateToken);
-		allowedOperations.add(ServiceOperation.getUsers);
-		allowedOperations.add(ServiceOperation.getGroups);
-	}
-	
-	
-	
-	
 	private Log log = LogFactory.getLog(getClass());
 	private DorianGrouperConfiguration configuration;
 	
@@ -224,37 +205,9 @@ private static Set<ServiceOperation> allowedOperations;
 		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.getGroups);
 	}
 
-	public User addUser(String username, Collection<String> groups)
-			throws IdentityProviderException {
-		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.addUser);
-		
-	}
-
-	public Group addGroup(String group, Collection<String> users)
-			throws IdentityProviderException {
-		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.addGroup);
-	}
-
 	public Group removeGroup(String group) throws IdentityProviderException {
 		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.removeGroup);
 	}
-
-	public User removeUser(String user) throws IdentityProviderException {
-		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.removeUser);
-	}
-
-	public Group updateGroup(Group group) throws IdentityProviderException {
-		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.updateGroup);
-	}
-
-	public User updateUser(User user) throws IdentityProviderException {
-		throw new MethodNotImplementedException(DorianGrouperIdentityProvider.class.getName(), ServiceOperation.updateUser);
-	}
-
-	public boolean isOperationSupported(ServiceOperation serviceOperation) {
-		return allowedOperations.contains(serviceOperation);
-	}
-
 
 
 	public User lookupUserByName(String username)

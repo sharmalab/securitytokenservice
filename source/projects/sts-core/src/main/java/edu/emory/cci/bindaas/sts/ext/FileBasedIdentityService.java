@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.emory.cci.bindaas.sts.api.AbstractIdentityService;
+import edu.emory.cci.bindaas.sts.api.AbstractSimpleIdentityService;
 import edu.emory.cci.bindaas.sts.api.exception.AuthenticationException;
 import edu.emory.cci.bindaas.sts.api.exception.IdentityProviderException;
 import edu.emory.cci.bindaas.sts.api.exception.MethodNotImplementedException;
@@ -24,17 +23,8 @@ import edu.emory.cci.bindaas.sts.api.model.User;
 import edu.emory.cci.bindaas.sts.opensaml2.core.TokenGenerator;
 import edu.emory.cci.bindaas.sts.opensaml2.core.TokenParams;
 
-public class FileBasedIdentityService extends AbstractIdentityService{
+public class FileBasedIdentityService extends AbstractSimpleIdentityService{
 
-	private static Set<ServiceOperation> allowedOperations;
-	
-	static {
-		allowedOperations = new HashSet<ServiceOperation>();
-		allowedOperations.add(ServiceOperation.issueToken);
-		allowedOperations.add(ServiceOperation.validateToken);
-		allowedOperations.add(ServiceOperation.getUsers);
-		allowedOperations.add(ServiceOperation.getGroups);
-	}
 	
 	private FileBasedIdentityServiceConfiguration configuration;
 	private Map<String,User> users;
@@ -165,35 +155,9 @@ public class FileBasedIdentityService extends AbstractIdentityService{
 		return groups.values();
 	}
 
-	public User addUser(String username, Collection<String> groups)
-			throws IdentityProviderException {
-		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.addUser);
-		
-	}
-
-	public Group addGroup(String group, Collection<String> users)
-			throws IdentityProviderException {
-		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.addGroup);
-	}
-
+	
 	public Group removeGroup(String group) throws IdentityProviderException {
 		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.removeGroup);
-	}
-
-	public User removeUser(String user) throws IdentityProviderException {
-		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.removeUser);
-	}
-
-	public Group updateGroup(Group group) throws IdentityProviderException {
-		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.updateGroup);
-	}
-
-	public User updateUser(User user) throws IdentityProviderException {
-		throw new MethodNotImplementedException(FileBasedIdentityProvider.class.getName(), ServiceOperation.updateUser);
-	}
-
-	public boolean isOperationSupported(ServiceOperation serviceOperation) {
-		return allowedOperations.contains(serviceOperation);
 	}
 
 
