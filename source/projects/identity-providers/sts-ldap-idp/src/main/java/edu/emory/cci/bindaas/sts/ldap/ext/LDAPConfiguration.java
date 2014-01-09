@@ -205,11 +205,11 @@ public class LDAPConfiguration {
 
 		while ( cursorUsers.next() )
 		{
-		    Entry entry = cursorUsers.get();   
-		    String givenName = entry.get("givenName").getString();
-		    String sn = entry.get("sn").getString();
-		    String email = entry.get("mail").getString();
+		    Entry entry = cursorUsers.get();
 		    String cn = entry.get("cn").getString();
+		    String givenName = entry.get("givenName") !=null ? entry.get("givenName").getString() : cn;
+		    String sn = entry.get("sn") !=null ? entry.get("sn").getString() : cn;
+		    String email = entry.get("mail") !=null ? entry.get("mail").getString() : cn + "@example.org";
 		    
 		    String dn = entry.getDn().toString();
 		    
