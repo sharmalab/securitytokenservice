@@ -1,0 +1,14 @@
+{
+  "ldapConfiguration": {
+    "ldapUrl": "ldap://10.28.163.89:1389",
+    "dnTemplate": "cn=%s,ou=Users,dc=cancerimagingarchive,dc=net",
+    "searchUsersLdapQuery": "ou=Users,dc=cancerimagingarchive,dc=net"
+  },
+  "csmConfiguration": {
+    "username": "nciaadmin",
+    "password": "nciA#112",
+    "jdbcUrl": "jdbc:mysql://10.28.163.67:3306/ncia",
+    "jdbcDriver": "com.mysql.jdbc.Driver"
+  },
+  "issuerName": "TCIA"
+}
