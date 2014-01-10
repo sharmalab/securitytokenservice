@@ -6,9 +6,9 @@
 	</properties>
 	<parent>
 		<groupId>bindaas-sts</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<relativePath>../../maven/sts-master/pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -69,7 +69,7 @@
 			
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.opensaml2.bundle.Activator</Bundle-Activator>
 						<Import-Package>org.osgi.*,org.apache.commons.logging,com.google.gson,com.google.gson.annotations,!*</Import-Package>
-						<Private-Package>edu.emory.cci.bindaas.sts.opensaml2.bundle</Private-Package>
+						<Private-Package>edu.*</Private-Package>
 						<!-- embed compile/runtime dependencies using path that matches the 
 							copied dependency folder -->
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
