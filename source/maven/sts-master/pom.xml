@@ -28,8 +28,62 @@
 					<compilerVersion>1.6</compilerVersion>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<ant antfile="${basedir}/build.xml" target="mvn-clean" />
+							</tasks>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<id>copy-binaries</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<ant antfile="${basedir}/build.xml" target="mvn-package" />
+							</tasks>
+						</configuration>
+					</execution>
+					
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>bindaas-osgi</groupId>
+			<artifactId>com.google.gson</artifactId>
+			<version>2.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>bindaas-osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.8.2.v20130124</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
 	<repositories>
 		<repository>
@@ -57,6 +111,13 @@
 
 
 	<modules>
-		<module>../../source/projects/sts-core</module>
+		<module>../../projects/sts-core</module>
+		<module>../../projects/sts-cxf-wrapper</module>
+		<module>../../projects/sts-junit</module>
+		<module>../../projects/sts-log4j</module>
+		<module>../../projects/sts-opensaml</module>
+		<module>../../projects/identity-providers/sts-ldap-csm-idp</module>
+		<module>../../projects/identity-providers/sts-ldap-idp</module>
+		<module>../../projects/identity-providers/sts-dorian-gridgrouper-facade-idp</module>
 	</modules>
 </project>
