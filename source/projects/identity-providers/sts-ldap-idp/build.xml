@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Nov 12, 2012 2:48:35 PM                                                        
+
+     sts-ldap-idp    
+     Copy project to do maven build
+                   
+     nadir                                                                
+     ====================================================================== -->
+<project name="sts-ldap-idp" default="mvn-package">
+
+
+	<description>
+            Copy project to do maven build
+    </description>
+
+	<property name="dist.placeholder.dir" value="../../../../source/maven/sts-master/dist">
+	</property>
+
+
+	<target name="mvn-clean">
+		<echo> Cleaning ${ant.project.name} </echo>
+	</target>
+
+	<target name="mvn-package">
+		<copy todir="${dist.placeholder.dir}/bundles/system">
+			<fileset dir="target">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+</project>

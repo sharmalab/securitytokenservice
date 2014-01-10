@@ -6,9 +6,9 @@
 	</properties>
 	<parent>
 		<groupId>bindaas-sts</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<relativePath>../../../maven/sts-master/pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -82,7 +82,7 @@
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.ldap.bundle.Activator</Bundle-Activator>
 						<Import-Package>edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.service,edu.emory.cci.bindaas.sts.api.model,edu.emory.cci.bindaas.sts.api.exception,edu.emory.cci.bindaas.sts.api,edu.emory.cci.bindaas.sts.util,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,org.osgi.service.http;version="1.2.0",!*
 						</Import-Package>
-						<Private-Package>edu.emory.cci.bindaas.sts.ldap.bundle</Private-Package>
+						<Private-Package>edu.*</Private-Package>
 
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
