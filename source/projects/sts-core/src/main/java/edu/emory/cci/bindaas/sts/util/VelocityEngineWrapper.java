@@ -29,7 +29,7 @@ public class VelocityEngineWrapper {
 		this.props = props;
 	}
 
-	private final static String TEMPLATE_DIRECTORY_PATH = "META-INF/templates";
+	private final static String TEMPLATE_DIRECTORY_PATH = "spring/templates";
 	private EscapeTool escapeTool = new EscapeTool();
 	private Properties props ;
 	private Log log = LogFactory.getLog(getClass());

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1388086244111
+Bnd-LastModified: 1389382121344
 Build-Jdk: 1.6.0_65
 Built-By: nadir
 Bundle-Activator: edu.emory.cci.bindaas.sts.bundle.Activator
@@ -71,30 +71,35 @@ Export-Package: edu.emory.cci.bindaas.sts.service;uses:="edu.emory.cci.b
  ,edu.emory.cci.bindaas.sts.api.model;uses:="com.google.gson.annotations
  ,com.google.gson,edu.emory.cci.bindaas.sts.util";version="0.0.1.SNAPSHO
  T"
-Ignore-Package: javax.crypto.interfaces,java.util.jar,edu.emory.cci.bind
- aas.sts.api,javax.swing.tree,org.apache.log4j,edu.emory.cci.bindaas.sts
- .api.model,java.net,com.werken.xpath,org.apache.log.format,org.apache.t
- ools.ant.taskdefs,junit.framework,javax.faces.component,javax.swing,jav
- a.io,org.jdom,java.util.zip,javax.security.auth.x500,javax.servlet.jsp.
- tagext,net.sf.ehcache,java.awt.event,java.lang,javax.net.ssl,java.util.
- concurrent,javax.naming,org.apache.commons.fileupload,org.apache.xerces
- .parsers,edu.emory.cci.bindaas.sts.internal.conf,java.util.concurrent.l
- ocks,org.ietf.jgss,javax.crypto,javax.servlet.jsp,java.lang.reflect,edu
- .emory.cci.bindaas.sts.rest.impl,com.google.inject.internal.asm.util,ja
- vax.swing.table,edu.emory.cci.bindaas.sts.ext,java.security.spec,java.b
- eans,org.springframework.dao,javax.inject,java.sql,java.util.logging,or
- g.apache.commons.logging.impl,org.apache.commons.fileupload.disk,javax.
- annotation,java.util,java.nio.channels,org.springframework.jdbc.core.su
- pport,javax.faces.context,java.lang.annotation,org.apache.log.output.io
- ,org.relaxng.datatype,org.apache.xerces.util,java.nio.charset,com.sun.m
- sv.datatype.xsd,java.math,org.gjt.xpp,org.springframework.jdbc.core,jav
- a.lang.ref,org.apache.xerces.xni,java.util.regex,javax.swing.event,java
- x.portlet,edu.emory.cci.bindaas.sts.service,org.apache.xerces.impl,sun.
- misc,java.util.concurrent.atomic,java.awt,org.apache.html.dom,org.jdom.
- output,com.sun.msv.datatype,org.jdom.input,java.nio,java.text,org.apach
- e.xerces.xni.parser,org.apache.tools.ant,edu.emory.cci.bindaas.sts.rest
- .api,java.security,javax.crypto.spec,org.apache.log,java.security.cert,
- javax.sql,edu.emory.cci.bindaas.sts.api.exception,junit.awtui
+Ignore-Package: javax.crypto.interfaces,javax.swing.tree,org.apache.log4
+ j,edu.emory.cci.bindaas.sts.api.model,com.werken.xpath,java.net,org.apa
+ che.tools.ant.taskdefs,junit.framework,org.jdom,java.util.zip,java.awt.
+ event,net.sf.ehcache,java.util.concurrent,org.apache.xerces.parsers,org
+ .opensaml.xml.schema,java.util.concurrent.locks,javax.crypto,javax.serv
+ let.jsp,java.lang.reflect,com.google.inject.internal.asm.util,javax.swi
+ ng.table,java.security.spec,java.sql,javax.inject,org.springframework.d
+ ao,java.beans,org.apache.commons.logging.impl,javax.annotation,org.spri
+ ngframework.jdbc.core.support,java.lang.annotation,org.opensaml.xml.sig
+ nature,org.relaxng.datatype,org.opensaml.common,org.apache.cxf.jaxrs,or
+ g.apache.xerces.util,java.nio.charset,java.math,com.sun.msv.datatype.xs
+ d,org.gjt.xpp,org.springframework.jdbc.core,java.lang.ref,javax.swing.e
+ vent,sun.misc,java.util.concurrent.atomic,java.awt,javax.crypto.spec,ja
+ va.security.cert,edu.emory.cci.bindaas.sts.api.exception,junit.awtui,ja
+ va.util.jar,org.apache.log.format,javax.faces.component,javax.swing,jav
+ a.io,org.junit.runner,javax.servlet.jsp.tagext,javax.security.auth.x500
+ ,javax.net.ssl,java.lang,org.opensaml.xml.security.credential,javax.nam
+ ing,org.apache.commons.fileupload,org.ietf.jgss,org.opensaml,org.opensa
+ ml.xml.security,java.util.logging,org.apache.commons.fileupload.disk,ja
+ va.util,java.nio.channels,javax.faces.context,org.opensaml.xml.util,org
+ .apache.log.output.io,org.opensaml.xml.security.keyinfo,sun.security.pk
+ cs,org.joda.time,org.opensaml.saml2.core,org.apache.xerces.xni,java.uti
+ l.regex,edu.emory.cci.bindaas.sts.service,javax.portlet,org.apache.xerc
+ es.impl,org.apache.html.dom,org.jdom.output,com.sun.msv.datatype,org.jd
+ om.input,java.nio,java.text,org.junit.runner.notification,org.apache.xe
+ rces.xni.parser,org.apache.tools.ant,org.opensaml.xml.validation,java.s
+ ecurity,sun.security.util,org.opensaml.xml.parse,org.apache.log,javax.s
+ ql,sun.security.x509,org.opensaml.xml,org.opensaml.saml2.core.impl,org.
+ apache.cxf.endpoint
 Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
  tions;version="[2.1,3)",com.google.gson.reflect;version="[2.1,3)",com.g
  oogle.gson.stream;version="[2.1,3)",edu.emory.cci.bindaas.sts.cxf.core;

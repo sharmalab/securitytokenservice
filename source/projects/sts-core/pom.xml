@@ -6,9 +6,9 @@
 	</properties>
 	<parent>
 		<groupId>bindaas-sts</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<relativePath>../../maven/sts-master/pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -142,14 +142,13 @@
 						<Bundle-Activator>edu.emory.cci.bindaas.sts.bundle.Activator</Bundle-Activator>
 						<Import-Package>org.apache.felix.http.api,edu.emory.cci.bindaas.sts.cxf.core,javax.ws.rs.ext,javax.ws.rs.core,javax.ws.rs,com.google.gson.stream,com.google.gson.reflect,com.google.gson,com.google.gson.annotations,org.junit,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,edu.emory.cci.bindaas.sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.util;version="0.0.1.SNAPSHOT",org.osgi.service.http;version="1.2.0",javax.servlet.http;version="0.0.0",javax.servlet;version="0.0.0",!*
 						</Import-Package>
-						<Private-Package>edu.emory.cci.bindaas.sts.bundle</Private-Package>
+						<Private-Package>edu.*</Private-Package>
 
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
 						<Embed-Transitive>true</Embed-Transitive>
-						<Include-Resource>spring=spring</Include-Resource>
-						<Include-Resource>webcontent=webcontent</Include-Resource>
+						<Include-Resource>webcontent=webcontent,spring=spring</Include-Resource>
 						<Spring-Context>spring/*.xml</Spring-Context>
 						<Test-Suite>edu.emory.cci.bindaas.sts.internal.test.ManagerService</Test-Suite>
 					</instructions>
