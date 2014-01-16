@@ -1,5 +1,5 @@
 ==========================================================
-== NOTICE file for use with Bindaas   ==
+== NOTICE file for use with SecurityTokenService / Project Rakshak   ==
 ==========================================================
 
 SecurityTokenService / Project Rakshak 
