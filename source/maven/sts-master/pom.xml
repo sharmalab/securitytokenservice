@@ -88,7 +88,7 @@
 	<repositories>
 		<repository>
 			<id>maven-cci</id>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/groups/public/</url>
+			<url>http://maven.cci.emory.edu/nexus/content/groups/public/</url>
 		</repository>
 
 	</repositories>
@@ -97,14 +97,14 @@
 		<repository>
 			<id>maven-cci</id>
 			<name>CCI Release</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/releases/</url>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/releases/</url>
 		</repository>
 
 		<!-- Publish the versioned releases here -->
 		<snapshotRepository>
 			<id>maven-cci</id>
 			<name>CCI Snapshot</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
