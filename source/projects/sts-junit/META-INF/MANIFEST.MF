@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1389382111625
+Bnd-LastModified: 1395283516374
 Build-Jdk: 1.6.0_65
 Built-By: nadir
-Bundle-Activator: edu.emory.cci.bindaas.sts.junit.bundle.Activator
+Bundle-Activator: org.rakshak.junit.bundle.Activator
 Bundle-ClassPath: .,target/dependency/junit-4.6.jar
 Bundle-Description: Junit Module
 Bundle-ManifestVersion: 2
-Bundle-Name: bindaas-sts-junit
-Bundle-SymbolicName: bindaas-sts-junit
+Bundle-Name: rakshak-junit
+Bundle-SymbolicName: rakshak-junit
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile|runtime;inline=false
@@ -29,15 +29,15 @@ Export-Package: org.junit.experimental.theories.suppliers;uses:="org.jun
  unit.runner.notification";version="0.0.1.SNAPSHOT",org.junit.internal.r
  unners.model;uses:="org.junit.runner,org.junit.internal,org.junit.runne
  r.notification";version="0.0.1.SNAPSHOT",org.junit.runner.manipulation;
- uses:="org.junit.runner";version="0.0.1.SNAPSHOT",org.junit.runner;uses
- :="org.junit.runners,org.junit.runners.model,junit.framework,org.junit.
- internal.runners,org.junit.internal,junit.runner,org.junit.runner.notif
- ication,org.junit.runner.manipulation,org.junit.internal.requests,org.j
- unit.internal.builders";version="0.0.1.SNAPSHOT",org.junit.runners;uses
- :="org.junit.internal.runners,org.junit.runners.model,org.junit.interna
- l.runners.model,org.junit.internal,org.junit.runner,org.junit.runner.no
- tification,org.junit.internal.runners.statements,org.junit,org.junit.ru
- nner.manipulation,org.junit.internal.builders";version="0.0.1.SNAPSHOT"
+ uses:="org.junit.runner";version="0.0.1.SNAPSHOT",org.junit.runners;use
+ s:="org.junit.internal.runners,org.junit.runners.model,org.junit.intern
+ al.runners.model,org.junit.internal,org.junit.runner,org.junit.runner.n
+ otification,org.junit.internal.runners.statements,org.junit,org.junit.r
+ unner.manipulation,org.junit.internal.builders";version="0.0.1.SNAPSHOT
+ ",org.junit.runner;uses:="org.junit.runners,org.junit.runners.model,jun
+ it.framework,org.junit.internal.runners,org.junit.internal,junit.runner
+ ,org.junit.runner.notification,org.junit.runner.manipulation,org.junit.
+ internal.requests,org.junit.internal.builders";version="0.0.1.SNAPSHOT"
  ,org.junit.matchers;uses:="org.junit.internal.matchers";version="0.0.1.
  SNAPSHOT",org.junit.runner.notification;uses:="org.junit.runner";versio
  n="0.0.1.SNAPSHOT",org.junit.experimental.results;uses:="org.junit.runn
@@ -54,10 +54,10 @@ Export-Package: org.junit.experimental.theories.suppliers;uses:="org.jun
  rg.junit.internal.matchers;version="0.0.1.SNAPSHOT",org.junit.internal.
  requests;uses:="org.junit.runner,org.junit.internal.builders,org.junit.
  runner.manipulation,org.junit.internal.runners";version="0.0.1.SNAPSHOT
- ",org.junit.experimental;uses:="org.junit.runners.model,org.junit.runne
- r.notification,org.junit.runners,org.junit.runner";version="0.0.1.SNAPS
- HOT",org.junit.runners.model;uses:="org.junit.internal.runners.model,or
- g.junit.internal.runners,org.junit.runner,org.junit";version="0.0.1.SNA
+ ",org.junit.runners.model;uses:="org.junit.internal.runners.model,org.j
+ unit.internal.runners,org.junit.runner,org.junit";version="0.0.1.SNAPSH
+ OT",org.junit.experimental;uses:="org.junit.runners.model,org.junit.run
+ ner.notification,org.junit.runners,org.junit.runner";version="0.0.1.SNA
  PSHOT",org.junit.internal.runners.statements;uses:="org.junit.runners.m
  odel,org.junit.internal.runners.model";version="0.0.1.SNAPSHOT",junit.r
  unner;uses:="junit.framework";version="0.0.1.SNAPSHOT",junit.textui;use

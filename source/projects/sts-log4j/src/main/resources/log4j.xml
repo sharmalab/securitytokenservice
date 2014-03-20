@@ -20,7 +20,7 @@
 		</layout>
 	</appender>
 
-	<category name="edu" additivity="true">
+	<category name="org.rakshak" additivity="true">
 		<priority value="debug" />
 		
 	</category>

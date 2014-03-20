@@ -1,7 +1,7 @@
 package test;
 
-import edu.emory.cci.bindaas.sts.ldap_csm.ext.LDAPConfiguration;
-import edu.emory.cci.bindaas.sts.ldap_csm.ext.TCIALdapConfigurationHandler;
+import org.rakshak.idp.ldap_csm.ext.LDAPConfiguration;
+import org.rakshak.idp.ldap_csm.ext.TCIALdapConfigurationHandler;
 
 public class TestLDAPConfiguration {
 

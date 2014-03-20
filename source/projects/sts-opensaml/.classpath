@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry excluding="**/*.java" including="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
@@ -14,7 +8,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**/*.java" including="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry exported="true" kind="lib" path="target/dependency/xercesImpl-2.10.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="target/dependency/slf4j-api-1.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="target/dependency/xml-apis-1.4.01.jar"/>

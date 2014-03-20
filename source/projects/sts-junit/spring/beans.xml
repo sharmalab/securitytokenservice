@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
 
-<bean id="testCaseScanner" class="edu.emory.cci.bindaas.sts.junit.core.TestCaseScanner" init-method="init" >
+<bean id="testCaseScanner" class="org.rakshak.junit.core.TestCaseScanner" init-method="init" >
 </bean>
 
 </beans>

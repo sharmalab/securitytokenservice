@@ -9,21 +9,21 @@
 
  
 
-<bean id="managerService" class="edu.emory.cci.bindaas.sts.internal.impl.ManagerServiceImpl" init-method="init">
+<bean id="managerService" class="org.rakshak.core.internal.impl.ManagerServiceImpl" init-method="init">
 	<property name="serviceRegistrationFile" value="service-reg.json"></property>
 	<property name="configurationManager" ref="configurationService"></property>	
 </bean>
 
-<bean id="configurationService" class="edu.emory.cci.bindaas.sts.internal.impl.ConfigurationManagerServiceImpl" init-method="init">
+<bean id="configurationService" class="org.rakshak.core.internal.impl.ConfigurationManagerServiceImpl" init-method="init">
 	<property name="configDirectory" value="service-config"></property>
 </bean>
 
-<bean id="fileBasesIdentityProvider" class="edu.emory.cci.bindaas.sts.ext.FileBasedIdentityProvider">
+<bean id="fileBasesIdentityProvider" class="org.rakshak.core.ext.FileBasedIdentityProvider">
 <property name="configurationManager" ref="configurationService"></property>
 <property name="keyPairFileName" value="public-private-keypair.secret"></property>
 </bean>
 
-<bean id="applicationStarter" class="edu.emory.cci.bindaas.sts.bundle.ApplicationStarter" init-method="startup">
+<bean id="applicationStarter" class="org.rakshak.core.bundle.ApplicationStarter" init-method="startup">
 	<property name="securityTokenService" ref="securityTokenServiceCore"></property>
 	<property name="configurationManager" ref="configurationService"></property>
 	<property name="defaultSystemConfiguration" ref="systemConfig"></property>
@@ -33,14 +33,14 @@
 
 </bean>
 
-<bean id="systemConfig" class="edu.emory.cci.bindaas.sts.internal.conf.SystemConfiguration">
+<bean id="systemConfig" class="org.rakshak.core.internal.conf.SystemConfiguration">
 		<property name="stsHost" value="0.0.0.0"></property>
 		<property name="stsPort" value="1111"></property>
 		<property name="stsProtocol" value="http"></property>
 		<property name="adminIdentityService" value="admin-identity-service"></property>
 </bean>
 
-<bean id="adminFileBasedIdentityConfiguration" class="edu.emory.cci.bindaas.sts.ext.FileBasedIdentityServiceConfiguration">
+<bean id="adminFileBasedIdentityConfiguration" class="org.rakshak.core.ext.FileBasedIdentityServiceConfiguration">
 		<property name="tokenLifetime" value="3600"></property>
 		<property name="userStore">
 			<map>
@@ -59,7 +59,7 @@
 		
 </bean>
 
-<bean id="loginFilter" class="edu.emory.cci.bindaas.sts.internal.web.login.LoginFilter">
+<bean id="loginFilter" class="org.rakshak.core.internal.web.login.LoginFilter">
 	<property name="appStarter" ref="applicationStarter"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 	<property name="bodyCenterTemplateName" value="admin_dashboard.login_body_center_section.vt.html"></property>
@@ -69,15 +69,15 @@
 	<property name="adminHomePage" ref="viewServiceServletUrl"></property>
 </bean>
 
-<bean id="securityTokenServiceCore" class="edu.emory.cci.bindaas.sts.rest.impl.SecurityTokenServiceCoreImpl" init-method="init">
+<bean id="securityTokenServiceCore" class="org.rakshak.core.rest.impl.SecurityTokenServiceCoreImpl" init-method="init">
 	<property name="managerService" ref="managerService"></property>
 </bean>
 
-<bean id="jdbcDriverRegistry" class="edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry" init-method="init">
+<bean id="jdbcDriverRegistry" class="org.rakshak.core.util.JDBCDriverRegistry" init-method="init">
 </bean>
 
 <!-- Velocity -->
-<bean id="velocityWrapper" class="edu.emory.cci.bindaas.sts.util.VelocityEngineWrapper" init-method="init">
+<bean id="velocityWrapper" class="org.rakshak.core.util.VelocityEngineWrapper" init-method="init">
 	<property name="props">
 		<props>
 			<prop key="resource.loader">class</prop>
@@ -87,7 +87,7 @@
 </bean>
 
 <!-- WebApp -->
-<bean id="webAppLauncher" class="edu.emory.cci.bindaas.sts.internal.web.WebApplicationLauncher" init-method="init">
+<bean id="webAppLauncher" class="org.rakshak.core.internal.web.WebApplicationLauncher" init-method="init">
 	<property name="listOfAppInitializers">
 		<list>
 			<ref bean="openIDWebApp"/>
@@ -97,13 +97,13 @@
 	<property name="loginFilter" ref="loginFilter"></property>
 </bean>
 
-<bean id="errorPage" class="edu.emory.cci.bindaas.sts.internal.web.common.ErrorPage" init-method="init">
+<bean id="errorPage" class="org.rakshak.core.internal.web.common.ErrorPage" init-method="init">
 	<property name="templateName" value="openid.error_page_body_center_section.vt.html"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 </bean>
 
-<bean id="loginPage" class="edu.emory.cci.bindaas.sts.internal.web.common.openid.UserLoginPage" init-method="init">
+<bean id="loginPage" class="org.rakshak.core.internal.web.common.openid.UserLoginPage" init-method="init">
 	<property name="templateName" value="openid.login_page_body_center_section.vt.html"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
@@ -111,7 +111,7 @@
 
 
 <!-- OpenID -->
-<bean id="openIDWebApp" class="edu.emory.cci.bindaas.sts.internal.web.WebModule" >
+<bean id="openIDWebApp" class="org.rakshak.core.internal.web.WebModule" >
 	<property name="moduleName" value="OpenID Web Application"></property>
 	<property name="listOfServlets">
 		<list>
@@ -120,7 +120,7 @@
 	</property>
 </bean>
 
-<bean id="opEndpoint" class="edu.emory.cci.bindaas.sts.internal.web.common.openid.OpenIDEndpointServlet">
+<bean id="opEndpoint" class="org.rakshak.core.internal.web.common.openid.OpenIDEndpointServlet">
 	<property name="errorPage" ref="errorPage"></property>
 	<property name="loginPage" ref="loginPage"></property>
 	<property name="managerService" ref="managerService"></property>
@@ -135,7 +135,7 @@
 
 
 <!-- Main Admin Web Apps -->
-<bean id="adminWebApps" class="edu.emory.cci.bindaas.sts.internal.web.WebModule" >
+<bean id="adminWebApps" class="org.rakshak.core.internal.web.WebModule" >
 	<property name="moduleName" value="Rakshak Admin Dashboard Application"></property>
 	<property name="listOfServlets">
 		<list>
@@ -146,7 +146,7 @@
 	</property>
 </bean>
 
-<bean id="viewServiceBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.ViewServiceBodyCenterSection" init-method="init">
+<bean id="viewServiceBodyCenterSection" class="org.rakshak.core.internal.web.action.dashboard.ViewServiceBodyCenterSection" init-method="init">
 	<property name="baseTemplateName" value="admin_dashboard.view_service_body_center_section.vt.html"></property>
 	<property name="createEditServletUrl" ref="createEditIdentityServletUrl"></property>
 	<property name="gettingStartedUrl" value="/rakshak/administration/getting_started"></property>
@@ -155,7 +155,7 @@
 	<property name="appStarter" ref="applicationStarter"></property>
 </bean>
 
-<bean id="serviceMenuLeftMarginSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.ServiceMenuLeftMarginSection" init-method="init">
+<bean id="serviceMenuLeftMarginSection" class="org.rakshak.core.internal.web.action.dashboard.ServiceMenuLeftMarginSection" init-method="init">
 	<property name="baseTemplateName" value="admin_dashboard.service_menu_left_margin_section.vt.html"></property>
 	<property name="createNewServiceUrl" ref="createEditIdentityServletUrl"></property>
 	<property name="viewServiceUrl" ref="viewServiceServletUrl"></property>
@@ -163,18 +163,18 @@
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 </bean>
 
-<bean id="postLoginUserSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.PostLoginUserSection" init-method="init">
+<bean id="postLoginUserSection" class="org.rakshak.core.internal.web.action.dashboard.PostLoginUserSection" init-method="init">
 	<property name="baseTemplateName" value="admin_dashboard.post_login_user_section.vt.html"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 </bean>
 
-<bean id="gettingStartedBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GettingStartedBodyCenterSection" init-method="init">
+<bean id="gettingStartedBodyCenterSection" class="org.rakshak.core.internal.web.action.dashboard.GettingStartedBodyCenterSection" init-method="init">
 	<property name="baseTemplateName" value="admin_dashboard.getting_started_body_center_section.vt.html"></property>
 	<property name="createNewServiceUrl" ref="createEditIdentityServletUrl"></property>
 	<property name="velocityEngineWrapper" ref="velocityWrapper"></property>
 </bean>
 
-<bean id="createNewServiceBodyCenterSection" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.CreateNewServiceBodyCenterSection" init-method="init">
+<bean id="createNewServiceBodyCenterSection" class="org.rakshak.core.internal.web.action.dashboard.CreateNewServiceBodyCenterSection" init-method="init">
 	<property name="baseTemplateName" value="admin_dashboard.create_new_service_body_center_section.vt.html"></property>
 	<property name="createEditServletUrl" ref="createEditIdentityServletUrl"></property>
 	<property name="viewServiceServletUrl" ref="viewServiceServletUrl"></property>
@@ -195,7 +195,7 @@
 </bean>
 
 <!-- servlets -->
-<bean id="createEditIdentityServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.CreateEditIdentityServiceServlet">
+<bean id="createEditIdentityServlet" class="org.rakshak.core.internal.web.action.dashboard.CreateEditIdentityServiceServlet">
 	<property name="servletUrl" ref="createEditIdentityServletUrl"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 	<property name="bodyCenterSection" ref="createNewServiceBodyCenterSection"></property>
@@ -209,7 +209,7 @@
 	<property name="viewServiceUrl" ref="viewServiceServletUrl"></property>
 </bean>
 
-<bean id="gettingStartedServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GeneralBaseTemplateServlet">
+<bean id="gettingStartedServlet" class="org.rakshak.core.internal.web.action.dashboard.GeneralBaseTemplateServlet">
 	<property name="servletUrl" value="/rakshak/administration/getting_started"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 	<property name="bodyCenterSection" ref="gettingStartedBodyCenterSection"></property>
@@ -222,7 +222,7 @@
 </bean>
 
 
-<bean id="viewServiceServlet" class="edu.emory.cci.bindaas.sts.internal.web.action.dashboard.GeneralBaseTemplateServlet">
+<bean id="viewServiceServlet" class="org.rakshak.core.internal.web.action.dashboard.GeneralBaseTemplateServlet">
 	<property name="servletUrl" ref="viewServiceServletUrl"></property>
 	<property name="baseTemplateName" value="common.general_base_template.vt.html"></property>
 	<property name="bodyCenterSection" ref="viewServiceBodyCenterSection"></property>
@@ -237,10 +237,10 @@
 
 
 
-<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.service.IManagerService" ref="managerService"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry" ref="jdbcDriverRegistry"></osgi:service>
+<osgi:service interface="org.rakshak.core.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
+<osgi:service interface="org.rakshak.core.service.IManagerService" ref="managerService"></osgi:service>
+<osgi:service interface="org.rakshak.core.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
+<osgi:service interface="org.rakshak.core.util.JDBCDriverRegistry" ref="jdbcDriverRegistry"></osgi:service>
 </beans>
 
 

@@ -7,11 +7,9 @@
        http://www.springframework.org/schema/osgi  
        http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
-<bean id="identityProvider" class="edu.emory.cci.bindaas.sts.cagrid.ext.DorianGrouperIdentityProvider">	
-</bean> 
+<bean id="identityProvider" class="org.rakshak.idp.cagrid.ext.DorianGrouperIdentityProvider"></bean> 
 
-
-<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="identityProvider"></osgi:service>
+<osgi:service interface="org.rakshak.core.api.IIdentityProvider" ref="identityProvider"></osgi:service>
 </beans>
 
 

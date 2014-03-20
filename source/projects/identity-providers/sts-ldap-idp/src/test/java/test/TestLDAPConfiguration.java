@@ -2,7 +2,7 @@ package test;
 
 import java.util.Arrays;
 
-import edu.emory.cci.bindaas.sts.ldap.ext.LDAPConfiguration;
+import org.rakshak.idp.ldap.ext.LDAPConfiguration;
 
 public class TestLDAPConfiguration {
 

@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/osgi  
        http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
-<bean id="identityProvider" class="edu.emory.cci.bindaas.sts.ldap_csm.ext.LdapCsmIdentityProvider">
+<bean id="identityProvider" class="org.rakshak.idp.ldap_csm.ext.LdapCsmIdentityProvider">
 	<property name="configurationManager" ref="configurationManager"></property>
 	<property name="csmConfigurationHandler" ref="defaultCSMConfigurationHandler"></property>
 	<property name="ldapConfigHandler" ref="tciaLDAPHandler"></property>
@@ -15,24 +15,24 @@
 	<property name="keyPairFileName" value="public-private-keypair.secret"></property>
 </bean> 
 
-<bean id="defaultCSMConfigurationHandler" class="edu.emory.cci.bindaas.sts.ldap_csm.ext.DefaultCSMConfigurationHandler" init-method="init">
+<bean id="defaultCSMConfigurationHandler" class="org.rakshak.idp.ldap_csm.ext.DefaultCSMConfigurationHandler" init-method="init">
 	<property name="fetchAllGroupsSQL" value="select C.group_name , B.login_name from csm_user_group A inner join csm_user B on A.user_id = B.user_id inner join csm_group C on A.group_id = C.group_id"></property>
 	<property name="fetchUserGroupSQL" value="select C.group_name from csm_user_group A inner join csm_user B on A.user_id = B.user_id inner join csm_group C on A.group_id = C.group_id where B.login_name = ?"></property>
 	<property name="jdbcDriverRegistry" ref="jdbcDriverRegistry"></property>
 </bean>
 
-<bean id="tciaLDAPHandler" class="edu.emory.cci.bindaas.sts.ldap_csm.ext.TCIALdapConfigurationHandler">
+<bean id="tciaLDAPHandler" class="org.rakshak.idp.ldap_csm.ext.TCIALdapConfigurationHandler">
 </bean>
 
 
-<osgi:reference interface="edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry" id="jdbcDriverRegistry" ></osgi:reference>
-<osgi:reference interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" id="configurationManager"></osgi:reference>
+<osgi:reference interface="org.rakshak.core.util.JDBCDriverRegistry" id="jdbcDriverRegistry" ></osgi:reference>
+<osgi:reference interface="org.rakshak.core.service.IConfigurationManagerService" id="configurationManager"></osgi:reference>
 
-<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="identityProvider"></osgi:service>
+<osgi:service interface="org.rakshak.core.api.IIdentityProvider" ref="identityProvider"></osgi:service>
 <!-- 
-<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.service.IManagerService" ref="managerService"></osgi:service>
-<osgi:service interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
+<osgi:service interface="org.rakshak.core.api.IIdentityProvider" ref="fileBasesIdentityProvider"></osgi:service>
+<osgi:service interface="org.rakshak.core.service.IManagerService" ref="managerService"></osgi:service>
+<osgi:service interface="org.rakshak.core.service.IConfigurationManagerService" ref="configurationService"></osgi:service>
 
  -->
 </beans>

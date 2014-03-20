@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1389382108377
+Bnd-LastModified: 1395283513915
 Build-Jdk: 1.6.0_65
 Built-By: nadir
-Bundle-Activator: edu.emory.cci.bindaas.sts.opensaml2.bundle.Activator
+Bundle-Activator: org.rakshak.opensaml2.bundle.Activator
 Bundle-ClassPath: .,target/dependency/opensaml-2.5.3.jar,target/dependen
  cy/openws-1.4.4.jar,target/dependency/xmltooling-1.3.4.jar,target/depen
  dency/bcprov-jdk15-1.46.jar,target/dependency/not-yet-commons-ssl-0.3.9
@@ -17,8 +17,8 @@ Bundle-ClassPath: .,target/dependency/opensaml-2.5.3.jar,target/dependen
  y/slf4j-api-1.7.5.jar
 Bundle-Description: OpenSAML module
 Bundle-ManifestVersion: 2
-Bundle-Name: bindaas-sts-opensaml
-Bundle-SymbolicName: bindaas-sts-opensaml
+Bundle-Name: rakshak-opensaml
+Bundle-SymbolicName: rakshak-opensaml
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile|runtime;inline=false
@@ -49,17 +49,14 @@ Embedded-Artifacts: target/dependency/opensaml-2.5.3.jar;g="org.opensaml
  ndency/jcl-over-slf4j-1.7.5.jar;g="org.slf4j";a="jcl-over-slf4j";v="1.7
  .5",target/dependency/slf4j-api-1.7.5.jar;g="org.slf4j";a="slf4j-api";v
  ="1.7.5"
-Export-Package: edu.emory.cci.bindaas.sts.opensaml2;version="0.0.1.SNAPS
- HOT",edu.emory.cci.bindaas.sts.opensaml2.util;uses:="edu.emory.cci.bind
- aas.sts.opensaml2.model";version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas
- .sts.opensaml2.model;uses:="com.google.gson.annotations";version="0.0.1
- .SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.core;uses:="org.apache.c
- ommons.logging,edu.emory.cci.bindaas.sts.opensaml2.model,edu.emory.cci.
- bindaas.sts.opensaml2.exception,edu.emory.cci.bindaas.sts.opensaml2.uti
- l";version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.excepti
- on;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.opensaml2.bundle;
- uses:="edu.emory.cci.bindaas.sts.opensaml2.core,org.apache.commons.logg
- ing,org.osgi.framework";version="0.0.1.SNAPSHOT"
+Export-Package: org.rakshak.opensaml2.exception;version="0.0.1.SNAPSHOT"
+ ,org.rakshak.opensaml2.bundle;uses:="org.apache.commons.logging,org.rak
+ shak.opensaml2.core,org.osgi.framework";version="0.0.1.SNAPSHOT",org.ra
+ kshak.opensaml2.core;uses:="org.apache.commons.logging,org.rakshak.open
+ saml2.util,org.rakshak.opensaml2.model,org.rakshak.opensaml2.exception"
+ ;version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.util;uses:="org.rakshak
+ .opensaml2.model";version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.model;
+ uses:="com.google.gson.annotations";version="0.0.1.SNAPSHOT"
 Ignore-Package: javax.crypto.interfaces,java.util.jar,org.apache.log4j,o
  rg.owasp.validator.html,java.net,com.werken.xpath,org.apache.log.format
  ,org.apache.tools.ant.taskdefs,org.apache.log4j.spi,javax.servlet,javax

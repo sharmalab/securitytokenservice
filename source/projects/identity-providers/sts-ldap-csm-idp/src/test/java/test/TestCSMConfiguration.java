@@ -2,12 +2,12 @@ package test;
 
 import java.sql.Driver;
 
+import org.rakshak.core.util.JDBCDriverRegistry;
+import org.rakshak.idp.ldap_csm.ext.CSMConfiguration;
+import org.rakshak.idp.ldap_csm.ext.DefaultCSMConfigurationHandler;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-
-import edu.emory.cci.bindaas.sts.ldap_csm.ext.CSMConfiguration;
-import edu.emory.cci.bindaas.sts.ldap_csm.ext.DefaultCSMConfigurationHandler;
-import edu.emory.cci.bindaas.sts.util.JDBCDriverRegistry;
 
 public class TestCSMConfiguration {
 

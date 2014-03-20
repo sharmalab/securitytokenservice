@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
-		<bundle.symbolicName>bindaas-sts-opensaml</bundle.symbolicName>
-		<bundle.namespace>edu.emory.cci.bindaas.sts.opensaml</bundle.namespace>
+		<bundle.symbolicName>rakshak-opensaml</bundle.symbolicName>
+		<bundle.namespace>org.rakshak.opensaml</bundle.namespace>
 	</properties>
 	<parent>
-		<groupId>bindaas-sts</groupId>
+		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
 		<version>0.0.1</version>
 		<relativePath>../../maven/sts-master/pom.xml</relativePath>
@@ -33,9 +33,6 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-		
-
-
 	</dependencies>
 
 	<build>
@@ -65,11 +62,11 @@
 						<Bundle-Version>${pom.version}</Bundle-Version>
 						<!-- assume public classes are in the top package, and private classes 
 							are under ".internal" -->
-						<Export-Package>edu.emory.cci.bindaas.sts.opensaml2.*;version="${pom.version}"</Export-Package>
+						<Export-Package>org.rakshak.opensaml2.*;version="${pom.version}"</Export-Package>
 			
-						<Bundle-Activator>edu.emory.cci.bindaas.sts.opensaml2.bundle.Activator</Bundle-Activator>
+						<Bundle-Activator>org.rakshak.opensaml2.bundle.Activator</Bundle-Activator>
 						<Import-Package>org.osgi.*,org.apache.commons.logging,com.google.gson,com.google.gson.annotations,!*</Import-Package>
-						<Private-Package>edu.*</Private-Package>
+						<Private-Package>org.rakshak.*</Private-Package>
 						<!-- embed compile/runtime dependencies using path that matches the 
 							copied dependency folder -->
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>

@@ -7,14 +7,14 @@
        http://www.springframework.org/schema/osgi  
        http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
-<bean id="identityProvider" class="edu.emory.cci.bindaas.sts.ldap.ext.LdapIdentityProvider">
+<bean id="identityProvider" class="org.rakshak.idp.ldap.ext.LdapIdentityProvider">
 	<property name="configurationManager" ref="configurationManager"></property>
 	<property name="keyPairFileName" value="public-private-keypair.secret"></property>  
 </bean> 
 
-<osgi:reference interface="edu.emory.cci.bindaas.sts.service.IConfigurationManagerService" id="configurationManager"></osgi:reference>
+<osgi:reference interface="org.rakshak.core.service.IConfigurationManagerService" id="configurationManager"></osgi:reference>
 
-<osgi:service interface="edu.emory.cci.bindaas.sts.api.IIdentityProvider" ref="identityProvider"></osgi:service>
+<osgi:service interface="org.rakshak.core.api.IIdentityProvider" ref="identityProvider"></osgi:service>
 
 </beans>
 

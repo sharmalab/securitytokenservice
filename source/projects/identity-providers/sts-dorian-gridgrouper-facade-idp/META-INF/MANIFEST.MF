@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1389382126805
+Bnd-LastModified: 1395283530067
 Build-Jdk: 1.6.0_65
 Built-By: nadir
-Bundle-Activator: edu.emory.cci.bindaas.sts.cagrid.bundle.Activator
+Bundle-Activator: org.rakshak.idp.cagrid.bundle.Activator
 Bundle-ClassPath: .,target/dependency/commons-codec-1.3.jar,target/depen
  dency/httpclient-4.1.2.jar,target/dependency/httpcore-4.1.2.jar
 Bundle-Description: caGRID Identity Provider - Dorian And GridGrouper us
  ing STS 1.0 facade
 Bundle-ManifestVersion: 2
-Bundle-Name: sts-dorian-gridgrouper-facade-idp
-Bundle-SymbolicName: sts-dorian-gridgrouper-facade-idp
+Bundle-Name: rakshak-dorian-gridgrouper-facade-idp
+Bundle-SymbolicName: rakshak-dorian-gridgrouper-facade-idp
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile|runtime;inline=false
@@ -22,17 +22,17 @@ Embedded-Artifacts: target/dependency/commons-codec-1.3.jar;g="commons-c
  y/httpcore-4.1.2.jar;g="org.apache.httpcomponents";a="httpcore";v="4.1.
  2"
 Ignore-Package: javax.ws.rs,java.net,org.apache.velocity.context,org.ope
- nid4java.message,javax.xml.namespace,org.openid4java.message.ax,javax.s
- ervlet,org.openid4java.message.sreg,java.io,org.junit.runner,java.util.
+ nid4java.message,javax.xml.namespace,javax.servlet,org.openid4java.mess
+ age.ax,org.openid4java.message.sreg,java.io,org.junit.runner,java.util.
  zip,org.apache.velocity.app,javax.security.auth.x500,javax.net.ssl,java
- .lang,org.opensaml.xml.security.credential,java.util.concurrent,com.goo
- gle.common.collect,org.apache.velocity.runtime.parser,org.opensaml.xml.
+ .lang,org.opensaml.xml.security.credential,java.util.concurrent,org.apa
+ che.velocity.runtime.parser,com.google.common.collect,org.opensaml.xml.
  schema,java.util.concurrent.locks,javax.crypto,org.ietf.jgss,org.w3c.do
- m,java.lang.reflect,org.opensaml,org.opensaml.xml.security,org.apache.v
+ m,java.lang.reflect,org.opensaml.xml.security,org.opensaml,org.apache.v
  elocity,java.sql,java.util.logging,java.util,org.opensaml.xml.util,java
  .lang.annotation,org.opensaml.xml.security.keyinfo,com.google.common.ba
  se,org.opensaml.xml.signature,org.openid4java.server,org.opensaml.commo
- n,org.apache.velocity.runtime.parser.node,org.apache.cxf.jaxrs,sun.secu
+ n,org.apache.cxf.jaxrs,org.apache.velocity.runtime.parser.node,sun.secu
  rity.pkcs,org.joda.time,org.opensaml.saml2.core,java.util.regex,java.la
  ng.ref,org.apache.velocity.tools.generic,javax.ws.rs.core,org.apache.ve
  locity.runtime,java.text,org.junit.runner.notification,org.opensaml.xml
@@ -42,15 +42,13 @@ Ignore-Package: javax.ws.rs,java.net,org.apache.velocity.context,org.ope
  oint,javax.servlet.http
 Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
  tions;version="[2.1,3)",com.google.gson.reflect;version="[2.1,3)",com.g
- oogle.gson.stream;version="[2.1,3)",edu.emory.cci.bindaas.sts.api;versi
- on="[0.0,1)",edu.emory.cci.bindaas.sts.api.exception;version="[0.0,1)",
- edu.emory.cci.bindaas.sts.api.model;version="[0.0,1)",edu.emory.cci.bin
- daas.sts.opensaml2.core;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.
- sts.opensaml2.model;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.
- opensaml2.util;version="0.0.1.SNAPSHOT",edu.emory.cci.bindaas.sts.servi
- ce;version="[0.0,1)",edu.emory.cci.bindaas.sts.util;version="[0.0,1)",o
- rg.apache.commons.logging,org.junit,org.osgi.framework;version="[1.7,2)
- ",org.osgi.service.http;version="1.2.0",org.osgi.util.tracker;version="
- [1.5,2)"
+ oogle.gson.stream;version="[2.1,3)",org.apache.commons.logging,org.juni
+ t,org.osgi.framework;version="[1.7,2)",org.osgi.service.http;version="1
+ .2.0",org.osgi.util.tracker;version="[1.5,2)",org.rakshak.core.api;vers
+ ion="[0.0,1)",org.rakshak.core.api.exception;version="[0.0,1)",org.raks
+ hak.core.api.model;version="[0.0,1)",org.rakshak.core.service;version="
+ [0.0,1)",org.rakshak.core.util;version="[0.0,1)",org.rakshak.opensaml2.
+ core;version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.model;version="0.0.
+ 1.SNAPSHOT",org.rakshak.opensaml2.util;version="0.0.1.SNAPSHOT"
 Spring-Context: spring/*.xml
 Tool: Bnd-1.50.0

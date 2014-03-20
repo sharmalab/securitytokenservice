@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
-		<bundle.symbolicName>bindaas-sts-cxf-wrapper</bundle.symbolicName>
-		<bundle.namespace>edu.emory.cci.bindaas.sts.cxf</bundle.namespace>
+		<bundle.symbolicName>rakshak-cxf-wrapper</bundle.symbolicName>
+		<bundle.namespace>org.rakshak.cxf</bundle.namespace>
 	</properties>
 	<parent>
-		<groupId>bindaas-sts</groupId>
+		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
 		<version>0.0.1</version>
 		<relativePath>../../maven/sts-master/pom.xml</relativePath>
@@ -60,10 +60,10 @@
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>org.apache.cxf.configuration.security;version="${project.version}",org.apache.cxf.helpers;version="${project.version}",org.apache.cxf.interceptor.security;version="${project.version}",org.apache.cxf.jaxrs.ext;version="${project.version}",org.apache.cxf.jaxrs.model;version="${project.version}",org.apache.cxf.jaxrs.utils;version="${project.version}",org.apache.cxf.message;version="${project.version}",org.apache.cxf.phase;version="${project.version}",org.apache.cxf.security;version="${project.version}",org.apache.cxf.transport.http;version="${project.version}"
-						,javax.ws.rs.*;version="${project.version}",edu.emory.cci.bindaas.sts.cxf.core;version="${project.version}"</Export-Package>
-						<Bundle-Activator>edu.emory.cci.bindaas.sts.cxf.bundle.Activator</Bundle-Activator>
+						,javax.ws.rs.*;version="${project.version}",org.rakshak.cxf.core;version="${project.version}"</Export-Package>
+						<Bundle-Activator>org.rakshak.cxf.bundle.Activator</Bundle-Activator>
 						<Import-Package>org.osgi.service.event,org.osgi.framework;version="[1.7,2)",org.osgi.util.tracker,org.apache.commons.logging,!*</Import-Package>
-						<Private-Package>edu.*</Private-Package>
+						<Private-Package>org.rakshak.*</Private-Package>
 						<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
