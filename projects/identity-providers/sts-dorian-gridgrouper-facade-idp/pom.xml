@@ -1,17 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<properties>
-		<bundle.symbolicName>rakshak-dorian-gridgrouper-facade-idp</bundle.symbolicName>
-	</properties>
+
 	<parent>
 		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>../../../maven/sts-master/pom.xml</relativePath>
+		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>${bundle.symbolicName}</artifactId>
+	<artifactId>rakshak-dorian-gridgrouper-facade-idp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<description>caGRID Identity Provider - Dorian And GridGrouper using STS 1.0 facade</description>
@@ -53,7 +51,7 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>rakshak-dorian-gridgrouper-facade-idp</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 
 						<Export-Package></Export-Package>

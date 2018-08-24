@@ -1,18 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
-		<bundle.symbolicName>rakshak-ldap-idp</bundle.symbolicName>
 		<bundle.namespace>org.rakshak.core</bundle.namespace>
 	</properties>
 	<parent>
 		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>../../../maven/sts-master/pom.xml</relativePath>
+		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>${bundle.symbolicName}</artifactId>
+	<artifactId>rakshak-ldap-idp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<description>LDAP-CSM Identity Provider</description>
@@ -75,7 +74,7 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>rakshak-ldap-idp</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>org.rakshak.idp.ldap.ext.*;version="${project.version}"</Export-Package>
 						<Bundle-Activator>org.rakshak.idp.ldap.bundle.Activator</Bundle-Activator>

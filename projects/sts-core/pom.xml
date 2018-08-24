@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
-		<bundle.symbolicName>rakshak-core</bundle.symbolicName>
 		<bundle.namespace>org.rakshak.core</bundle.namespace>
 	</properties>
 	<parent>
@@ -12,7 +11,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>${bundle.symbolicName}</artifactId>
+	<artifactId>rakshak-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<description>Security Token Service API module</description>
@@ -134,7 +133,7 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>rakshak-core</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<!-- assume public classes are in the top package, and private classes 
 							are under ".internal" -->

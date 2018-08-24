@@ -1,8 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<properties>
-		<bundle.symbolicName>rakshak-log4j</bundle.symbolicName>
-	</properties>
 	<parent>
 		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
@@ -11,7 +8,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>${bundle.symbolicName}</artifactId>
+	<artifactId>rakshak-log4j</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<description>Log4j Configuration module</description>
@@ -35,7 +32,7 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>rakshak-log4j</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Fragment-Host>org.springframework.osgi.log4j.osgi</Fragment-Host>
 						<Import-Package>!*</Import-Package>
