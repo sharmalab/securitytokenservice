@@ -29,38 +29,6 @@
 				</configuration>
 			</plugin>
 			
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>clean</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<ant antfile="${basedir}/build.xml" target="mvn-clean" />
-							</tasks>
-						</configuration>
-					</execution>
-					
-					<execution>
-						<id>copy-binaries</id>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<ant antfile="${basedir}/build.xml" target="mvn-package" />
-							</tasks>
-						</configuration>
-					</execution>
-					
-				</executions>
-			</plugin>
-			
 		</plugins>
 	</build>
 
@@ -86,13 +54,14 @@
 
 
 	<modules>
-		<module>../../projects/sts-core</module>
-		<module>../../projects/sts-cxf-wrapper</module>
-		<module>../../projects/sts-junit</module>
-		<module>../../projects/sts-log4j</module>
-		<module>../../projects/sts-opensaml</module>
-		<module>../../projects/identity-providers/sts-ldap-csm-idp</module>
-		<module>../../projects/identity-providers/sts-ldap-idp</module>
-		<module>../../projects/identity-providers/sts-dorian-gridgrouper-facade-idp</module>
+		<module>projects/sts-core</module>
+		<module>projects/sts-cxf-wrapper</module>
+		<module>projects/sts-junit</module>
+		<module>projects/sts-log4j</module>
+		<module>projects/sts-opensaml</module>
+		<module>projects/identity-providers/sts-ldap-csm-idp</module>
+		<module>projects/identity-providers/sts-ldap-idp</module>
+		<module>projects/identity-providers/sts-dorian-gridgrouper-facade-idp</module>
+        <module>distribution</module>		
 	</modules>
 </project>
