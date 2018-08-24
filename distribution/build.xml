@@ -17,7 +17,7 @@
 	</property>
 
 	
-	<property name="dist.location" value="../../../binaries/">
+	<property name="dist.location" value="../../binaries/">
 	</property>
 	<property name="tmp.location" value="tmp">
 	</property>
@@ -25,9 +25,9 @@
 	</property>
 
 
-	<property name="dependencies" value="../../dependencies" />
-	<property name="third-party.bundle.repo" value="../../dependencies/bundles/third-party" />
-	<property name="startup.bundle.repo" value="../../dependencies/bundles/startup" />
+	<property name="dependencies" value="../dependencies" />
+	<property name="third-party.bundle.repo" value="../dependencies/bundles/third-party" />
+	<property name="startup.bundle.repo" value="../dependencies/bundles/startup" />
 	<property name="build.extras" value="build-extras" />
 
 	<target name="mvn-clean" depends="prepare">
