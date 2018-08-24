@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1395283513915
-Build-Jdk: 1.6.0_65
-Built-By: nadir
+Bnd-LastModified: 1535137582724
+Build-Jdk: 1.8.0_171
+Built-By: llovizna
 Bundle-Activator: org.rakshak.opensaml2.bundle.Activator
 Bundle-ClassPath: .,target/dependency/opensaml-2.5.3.jar,target/dependen
  cy/openws-1.4.4.jar,target/dependency/xmltooling-1.3.4.jar,target/depen
@@ -14,7 +14,8 @@ Bundle-ClassPath: .,target/dependency/opensaml-2.5.3.jar,target/dependen
  r,target/dependency/xercesImpl-2.10.0.jar,target/dependency/xml-resolve
  r-1.2.jar,target/dependency/xalan-2.7.1.jar,target/dependency/serialize
  r-2.7.1.jar,target/dependency/jcl-over-slf4j-1.7.5.jar,target/dependenc
- y/slf4j-api-1.7.5.jar
+ y/slf4j-api-1.7.5.jar,target/dependency/gson-2.6.2.jar,target/dependenc
+ y/osgi-3.1.1.jar
 Bundle-Description: OpenSAML module
 Bundle-ManifestVersion: 2
 Bundle-Name: rakshak-opensaml
@@ -48,37 +49,38 @@ Embedded-Artifacts: target/dependency/opensaml-2.5.3.jar;g="org.opensaml
  ncy/serializer-2.7.1.jar;g="xalan";a="serializer";v="2.7.1",target/depe
  ndency/jcl-over-slf4j-1.7.5.jar;g="org.slf4j";a="jcl-over-slf4j";v="1.7
  .5",target/dependency/slf4j-api-1.7.5.jar;g="org.slf4j";a="slf4j-api";v
- ="1.7.5"
-Export-Package: org.rakshak.opensaml2.exception;version="0.0.1.SNAPSHOT"
- ,org.rakshak.opensaml2.bundle;uses:="org.apache.commons.logging,org.rak
- shak.opensaml2.core,org.osgi.framework";version="0.0.1.SNAPSHOT",org.ra
- kshak.opensaml2.core;uses:="org.apache.commons.logging,org.rakshak.open
- saml2.util,org.rakshak.opensaml2.model,org.rakshak.opensaml2.exception"
- ;version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.util;uses:="org.rakshak
- .opensaml2.model";version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.model;
- uses:="com.google.gson.annotations";version="0.0.1.SNAPSHOT"
-Ignore-Package: javax.crypto.interfaces,java.util.jar,org.apache.log4j,o
- rg.owasp.validator.html,java.net,com.werken.xpath,org.apache.log.format
- ,org.apache.tools.ant.taskdefs,org.apache.log4j.spi,javax.servlet,javax
- .naming.directory,com.sun.net.ssl.internal.ssl,junit.framework,javax.sw
- ing,org.apache.log4j.xml,java.io,org.jdom,java.util.zip,javax.security.
- auth.x500,javax.servlet.jsp.tagext,java.awt.event,java.lang,javax.net.s
- sl,java.util.concurrent,javax.swing.border,javax.naming,org.apache.comm
- ons.fileupload,org.apache.commons.fileupload.servlet,java.util.concurre
- nt.locks,org.apache.oro.text.perl,javax.crypto,javax.servlet.jsp,java.l
- ang.reflect,net.jcip.annotations,java.security.spec,java.beans,java.sql
- ,bsh,com.sun.net.ssl,java.util.logging,org.apache.commons.configuration
- ,org.apache.commons.beanutils,javax.swing.text,org.apache.commons.fileu
- pload.disk,java.util,java.nio.channels,nu.xom,org.apache.log.output.io,
- java.rmi.server,java.security.interfaces,junit.textui,org.slf4j.impl,ja
- va.rmi.registry,org.apache.commons.fileupload.util,java.nio.charset,sun
- .security.pkcs,sun.io,java.math,javax.security.cert,java.util.regex,jav
- a.lang.ref,java.applet,javax.swing.event,java.awt,org.jdom.output,com.s
- un.crypto.provider,org.jdom.input,java.text,org.apache.tools.ant,java.s
- ecurity,sun.security.util,javax.crypto.spec,javax.net,org.apache.log,ja
- va.security.cert,javax.sql,java.rmi,sun.security.x509,javax.servlet.htt
- p
-Import-Package: com.google.gson;version="[2.1,3)",com.google.gson.annota
- tions;version="[2.1,3)",org.apache.commons.logging;version="[1.1,2)",or
- g.osgi.framework;version="[1.7,2)"
+ ="1.7.5",target/dependency/gson-2.6.2.jar;g="com.google.code.gson";a="g
+ son";v="2.6.2",target/dependency/osgi-3.1.1.jar;g="org.eclipse.equinox"
+ ;a="osgi";v="3.1.1"
+Export-Package: org.rakshak.opensaml2.util;uses:="org.rakshak.opensaml2.
+ model";version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.core;uses:="org.r
+ akshak.opensaml2.exception,org.apache.commons.logging,org.rakshak.opens
+ aml2.util,org.rakshak.opensaml2.model";version="0.0.1.SNAPSHOT",org.rak
+ shak.opensaml2.bundle;uses:="org.rakshak.opensaml2.core,org.apache.comm
+ ons.logging";version="0.0.1.SNAPSHOT",org.rakshak.opensaml2.exception;v
+ ersion="0.0.1.SNAPSHOT",org.rakshak.opensaml2.model;uses:="com.google.g
+ son.annotations";version="0.0.1.SNAPSHOT"
+Ignore-Package: java.applet,java.rmi,org.apache.commons.beanutils,net.jc
+ ip.annotations,org.apache.commons.fileupload.util,javax.servlet.http,ja
+ va.beans,com.sun.net.ssl,javax.sql,java.util.zip,java.security.cert,jav
+ a.security.spec,java.lang.ref,java.util.regex,nu.xom,java.net,java.secu
+ rity.interfaces,com.sun.net.ssl.internal.ssl,com.sun.crypto.provider,su
+ n.security.pkcs,java.lang.reflect,java.security,sun.security.x509,java.
+ util.concurrent,javax.swing.text,java.rmi.server,java.util.concurrent.l
+ ocks,java.lang,bsh,java.awt.event,javax.swing.border,javax.net,junit.fr
+ amework,org.apache.log,sun.security.util,java.sql,java.util.logging,jav
+ ax.crypto,java.util,javax.security.auth.x500,org.apache.commons.fileupl
+ oad,org.jdom,java.lang.annotation,javax.naming,java.nio.channels,javax.
+ servlet.jsp,java.nio.charset,org.apache.log.format,org.apache.log4j.xml
+ ,javax.naming.directory,junit.textui,com.werken.xpath,java.math,org.slf
+ 4j.impl,org.apache.commons.fileupload.servlet,org.apache.commons.config
+ uration,javax.security.cert,org.jdom.input,org.jdom.output,sun.io,java.
+ util.concurrent.atomic,javax.swing.event,javax.crypto.spec,javax.servle
+ t.jsp.tagext,java.awt,javax.servlet,org.owasp.validator.html,org.apache
+ .oro.text.perl,java.text,org.apache.log.output.io,org.apache.tools.ant.
+ taskdefs,java.io,java.util.jar,javax.crypto.interfaces,javax.net.ssl,or
+ g.apache.tools.ant,org.apache.log4j,java.rmi.registry,org.apache.log4j.
+ spi,org.apache.commons.fileupload.disk,javax.swing
+Import-Package: com.google.gson;version="[2.6,3)",com.google.gson.annota
+ tions;version="[2.6,3)",org.apache.commons.logging;version="[1.1,2)"
 Tool: Bnd-1.50.0

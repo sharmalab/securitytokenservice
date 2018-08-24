@@ -7,7 +7,7 @@
 		<groupId>org.rakshak</groupId>
 		<artifactId>master</artifactId>
 		<version>0.0.1</version>
-		<relativePath>../../maven/sts-master/pom.xml</relativePath>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -36,7 +36,7 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-						<Bundle-Version>${pom.version}</Bundle-Version>
+						<Bundle-Version>${project.version}</Bundle-Version>
 						<Fragment-Host>org.springframework.osgi.log4j.osgi</Fragment-Host>
 						<Import-Package>!*</Import-Package>
 				</instructions>
