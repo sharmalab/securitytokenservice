@@ -82,8 +82,8 @@
 
 
 	<modules>
-		<module>projects/sts-core</module>
 		<module>projects/sts-cxf-wrapper</module>
+		<module>projects/sts-core</module>
 		<module>projects/sts-junit</module>
 		<module>projects/sts-log4j</module>
 		<module>projects/sts-opensaml</module>

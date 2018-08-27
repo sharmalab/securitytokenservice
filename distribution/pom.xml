@@ -75,13 +75,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>rakshak-core</artifactId>
+			<artifactId>rakshak-cxf-wrapper</artifactId>
 			<version>${project.snapshot.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>rakshak-cxf-wrapper</artifactId>
+			<artifactId>rakshak-core</artifactId>
 			<version>${project.snapshot.version}</version>
 			<type>jar</type>
 		</dependency>
