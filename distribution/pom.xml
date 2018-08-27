@@ -24,22 +24,45 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
-								<ant antfile="${basedir}/build.xml" target="mvn-clean" />
-							</tasks>
+							<target>
+								<ant antfile="build.xml" target="clean"/>
+							</target>
 						</configuration>
 					</execution>
-					
 					<execution>
-						<id>copy-binaries</id>
+						<id>copy-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<ant antfile="build.xml" target="copyProject"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-dist</id>
 						<phase>package</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
-								<ant antfile="${basedir}/build.xml" target="mvn-package" />
-							</tasks>
+							<target>
+								<ant antfile="build.xml" target="dist"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>deploy-dist</id>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<ant antfile="build.xml" target="deploy-min"/>
+							</target>
 						</configuration>
 					</execution>
 					
@@ -50,16 +73,64 @@
 	</build>
 
 	<dependencies>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.6.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.equinox</groupId>
-                <artifactId>osgi</artifactId>
-                <version>3.1.1</version>
-            </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-core</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-cxf-wrapper</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-junit</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-log4j</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-opensaml</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-dorian-gridgrouper-facade-idp</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-ldap-csm-idp</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>rakshak-ldap-idp</artifactId>
+			<version>${project.snapshot.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>osgi</artifactId>
+			<version>3.1.1</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
